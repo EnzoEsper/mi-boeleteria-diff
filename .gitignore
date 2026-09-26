@@ -1,0 +1,9 @@
+node_modules/
+web/dist/
+web/node_modules/
+.deno/
+*.log
+kv.sqlite*
+smoke.*
+.env
+.env.*
