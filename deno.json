@@ -15,8 +15,6 @@
                     "zod":  "npm:zod@^4"
                 },
     "deploy":  {
-                   "org":  "enzoespergo",
-                   "app":  "mi-boleteria-diff",
                    "install":  "npm --prefix web install",
                    "build":  "deno task build",
                    "runtime":  {
@@ -64,3 +62,5 @@
                             ]
             }
 }
+
+
