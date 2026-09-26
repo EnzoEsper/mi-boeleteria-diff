@@ -68,23 +68,11 @@ web/       Vite + React + TypeScript
 
 ## Deploy
 
-Despliegue en Deno Deploy (paso 9 del plan). El proceso único de `server/main.ts` sirve **API + cron + estáticos** (`web/dist/` como fallback).
+Despliegue en **Deno Deploy EA** — la plataforma activa (la versión clásica se apagó el 20-jul-2026). El proceso único de `server/main.ts` sirve **API + cron + estáticos** (`web/dist/` como fallback).
 
-**Opción A — desde el dashboard (recomendada):**
+1. **Login** (una vez): `deno deploy whoami` — abre el browser y guarda el token en el keyring del sistema.
+2. **Alta de la app** (una vez): `deno deploy create --app mi-boleteria-diff --source local --entrypoint server/main.ts --build-command "deno task build"` (o `deno deploy create` sin flags para el flujo interactivo).
+3. **KV gestionada:** `deno deploy database provision mi-boleteria-kv --kind denokv` y `deno deploy database assign mi-boleteria-kv --app mi-boleteria-diff` (también desde la consola → *Databases*). En EA la app abre `Deno.openKv()` sin path y usa esa base.
+4. **Deploy:** `deno task deploy` = `deno task build` (gate local) + `deno deploy --app mi-boleteria-diff --prod`.
 
-1. Crear el proyecto en https://dash.deno.com y conectar el repo de GitHub.
-2. **Entrypoint:** `server/main.ts`.
-3. **Build command:** `deno task build` (genera `web/dist/` antes de cada deploy).
-4. Habilitar **Deno KV** (gratis, 1 click) — ahí viven fuentes, snapshots y deltas.
-5. Cada push a la rama principal vuelve a desplegar.
-
-**Opción B — manual desde la terminal:**
-
-```sh
-export DENO_DEPLOY_TOKEN=<token de dash.deno.com → Settings → Tokens>
-deno task deploy   # = deno task build && deployctl deploy --project=mi-boleteria-diff --entrypoint=server/main.ts
-```
-
-Ajustá `--project` en `deno.json` al nombre de tu proyecto si difiere de `mi-boleteria-diff`.
-
-No hay variables de entorno obligatorias: `PORT` es opcional (default 8000) y la KV usa la del runtime. Los secretos nunca se committean (`.env*` está en `.gitignore`).
+En EA la app detecta el entorno con `DENO_DEPLOY=1`: el cron maestro se registra **a nivel de módulo** en `server/main.ts` (requisito de descubrimiento de `Deno.cron()`); en local ese registro sigue dentro de `start()`. No hay variables de entorno obligatorias: `PORT` es opcional (default 8000). Los secretos nunca se committean (`.env*` está en `.gitignore`).

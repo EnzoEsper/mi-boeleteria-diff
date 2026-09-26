@@ -8,15 +8,15 @@
 
 ## Criterios de aceptación
 
-### AC-11.1 — Task de deploy reproducible
-- `deno.json` expone `tasks.deploy` que corre `deno task build` antes de desplegar y luego invoca `deployctl` con `--entrypoint=server/main.ts`.
-- El despliegue manual usa el token `DENO_DEPLOY_TOKEN` (documentado en el README, AC-11.3); no se committea ningún token (`.env*` fuera de git, AC-11.2).
+### AC-11.1 — Task de deploy reproducible *(enmendado en S16)*
+- `deno.json` expone `tasks.deploy` que corre `deno task build` antes de desplegar y luego invoca `deno deploy --app mi-boleteria-diff` (comando integrado del runtime, Deno Deploy EA). *(Antes: `npm:deployctl@1 deploy --project=... --entrypoint=server/main.ts` — paquete inexistente + Classic apagado.)*
+- El despliegue usa el token guardado en el keyring por `deno deploy whoami` (documentado en el README, AC-11.3); no se committea ningún token (`.env*` fuera de git, AC-11.2).
 
 ### AC-11.2 — Artefactos y secretos fuera de git
 - `.gitignore` excluye: `node_modules/`, `web/node_modules/`, `web/dist/`, la KV local (`kv.sqlite*`), salidas de smoke (`smoke.*`) y entornos (`.env`).
 
-### AC-11.3 — README documenta el deploy
-- Sección **Deploy** con: crear proyecto en `dash.deno.com` conectando el repo de GitHub, entrypoint `server/main.ts`, build command `deno task build`, habilitar Deno KV, y la alternativa manual `DENO_DEPLOY_TOKEN` + `deno task deploy`. Verificado por inspección de fuente (estilo AC-0.6).
+### AC-11.3 — README documenta el deploy *(enmendado en S16)*
+- Sección **Deploy** con: login `deno deploy whoami`, alta `deno deploy create` (entrypoint `server/main.ts`, build `deno task build`), KV gestionada (`database provision/assign --kind denokv`), detección `DENO_DEPLOY=1`, y la task `deno task deploy`. Verificado por inspección de fuente (estilo AC-0.6). *(Antes exigía `dash.deno.com` y `DENO_DEPLOY_TOKEN` de Classic.)*
 
 ### AC-11.4 — Boot end-to-end de un solo proceso
 - `start()` acepta opciones (`port`, `kvPath`, `distDir`, `cron`) con defaults compatibles con lo de hoy (`PORT` env → 8000, KV del runtime, `web/dist`, cron maestro activo) y sigue invocando `registerMasterCron(kv)` (regresión AC-5.6).

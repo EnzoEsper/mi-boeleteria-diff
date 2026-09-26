@@ -39,7 +39,7 @@
                   "dev":  "deno run -A --watch server/main.ts",
                   "dev:web":  "npm --prefix web run dev",
                   "build":  "npm --prefix web run build",
-                  "deploy":  "deno task build && deno run -A npm:deployctl@1 deploy --project=mi-boleteria-diff --entrypoint=server/main.ts"
+                  "deploy":  "deno task build && deno deploy --app mi-boleteria-diff --prod"
               },
     "lint":  {
                  "exclude":  [

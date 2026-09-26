@@ -85,3 +85,6 @@ Regenerada/actualizada en el paso ⑥ de cada micro-loop. `deno task spec:check`
 | AC-15.1 | specs/S15-router.md | tests/acceptance/s15_router.test.ts | 15 | verde |
 | AC-15.2 | specs/S15-router.md | tests/acceptance/s15_router.test.ts | 15 | verde |
 | AC-15.3 | specs/S15-router.md | tests/acceptance/s15_router.test.ts | 15 | verde |
+| AC-16.1 | specs/S16-deploy-ea.md | tests/acceptance/s16_deploy_ea.test.ts | 16 | verde |
+| AC-16.2 | specs/S16-deploy-ea.md | tests/acceptance/s16_deploy_ea.test.ts | 16 | verde |
+| AC-16.3 | specs/S16-deploy-ea.md | tests/acceptance/s16_deploy_ea.test.ts | 16 | verde |

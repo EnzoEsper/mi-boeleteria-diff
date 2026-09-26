@@ -11,13 +11,13 @@ async function leer(ruta: string): Promise<string> {
 // AC-11.1
 // ---------------------------------------------------------------------------
 
-Deno.test("AC-11.1: deno.json expone tasks.deploy con build previo y deployctl --entrypoint", async () => {
+Deno.test("AC-11.1: deno.json expone tasks.deploy con build previo y deno deploy (enmendado en S16)", async () => {
   const denoJson = JSON.parse(await leer("deno.json"));
   const deploy = denoJson.tasks?.deploy;
   assert(typeof deploy === "string", "falta la task deploy en deno.json");
   assertStringIncludes(deploy, "deno task build");
-  assertStringIncludes(deploy, "deployctl");
-  assertStringIncludes(deploy, "--entrypoint=server/main.ts");
+  assertStringIncludes(deploy, "deno deploy");
+  assert(!deploy.includes("npm:deployctl"), "la task ya no debe apuntar a deployctl Classic");
 });
 
 // ---------------------------------------------------------------------------
@@ -35,19 +35,20 @@ Deno.test("AC-11.2: .gitignore excluye artefactos, KV local, smoke y .env", asyn
 // AC-11.3
 // ---------------------------------------------------------------------------
 
-Deno.test("AC-11.3: README documenta el deploy (dashboard, entrypoint, build, KV, token)", async () => {
+Deno.test("AC-11.3: README documenta el deploy (EA: deno deploy, entrypoint, build, KV) (enmendado en S16)", async () => {
   const readme = await leer("README.md");
   for (const fragmento of [
-    "dash.deno.com",
     "server/main.ts",
     "deno task build",
-    "DENO_DEPLOY_TOKEN",
     "deno task deploy",
+    "deno deploy",
     "KV",
   ]) {
     assertStringIncludes(readme, fragmento, `README debe mencionar ${fragmento}`);
   }
   assert(/##\s+Deploy/.test(readme), "README debe tener una sección ## Deploy");
+  assert(!readme.includes("dash.deno.com"), "Classic quedó apagado: sin dash.deno.com");
+  assert(!readme.includes("DENO_DEPLOY_TOKEN"), "sin token manual de Classic");
 });
 
 // ---------------------------------------------------------------------------

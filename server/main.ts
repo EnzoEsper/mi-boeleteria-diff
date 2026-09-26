@@ -1,4 +1,4 @@
-import { registerMasterCron } from "./cron.ts";
+import { cronTick, registerMasterCron } from "./cron.ts";
 import { createApp } from "./router.ts";
 
 export interface OpcionesDeInicio {
@@ -8,11 +8,29 @@ export interface OpcionesDeInicio {
   cron?: boolean;
 }
 
+type DenoCronFn = (name: string, expression: string, handler: () => Promise<void>) => unknown;
+
+// Deno Deploy EA descubre `Deno.cron()` solo a nivel de módulo: los registros
+// hechos dentro de start() o tras awaits no se agendan. El handler abre su
+// propia KV (la gestionada asignada al app, sin path).
+const denoCron = (Deno as unknown as { cron?: DenoCronFn }).cron;
+if (Deno.env.get("DENO_DEPLOY") === "1" && typeof denoCron === "function") {
+  denoCron("scheduler-deploy", "* * * * *", async () => {
+    const kv = await Deno.openKv();
+    try {
+      await cronTick(kv);
+    } finally {
+      kv.close();
+    }
+  });
+}
+
 export async function start(opciones: OpcionesDeInicio = {}) {
   const port = opciones.port ?? Number(Deno.env.get("PORT") ?? 8000);
   const kv = opciones.kvPath ? await Deno.openKv(opciones.kvPath) : await Deno.openKv();
   const app = createApp(kv, opciones.distDir ? { distDir: opciones.distDir } : {});
-  const cron = opciones.cron === false ? false : registerMasterCron(kv);
+  const enEA = Deno.env.get("DENO_DEPLOY") === "1";
+  const cron = opciones.cron === false || enEA ? false : registerMasterCron(kv);
   const estadoCron = opciones.cron === false ? "deshabilitado" : cron ? "activo" : "no soportado";
   const server = await Deno.serve({ port }, app.fetch);
   const direccion = server.addr;
