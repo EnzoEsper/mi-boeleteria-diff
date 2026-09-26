@@ -88,3 +88,4 @@ Regenerada/actualizada en el paso ⑥ de cada micro-loop. `deno task spec:check`
 | AC-16.1 | specs/S16-deploy-ea.md | tests/acceptance/s16_deploy_ea.test.ts | 16 | verde |
 | AC-16.2 | specs/S16-deploy-ea.md | tests/acceptance/s16_deploy_ea.test.ts | 16 | verde |
 | AC-16.3 | specs/S16-deploy-ea.md | tests/acceptance/s16_deploy_ea.test.ts | 16 | verde |
+| AC-16.4 | specs/S16-deploy-ea.md | tests/acceptance/s16_deploy_ea.test.ts | 16 | verde |

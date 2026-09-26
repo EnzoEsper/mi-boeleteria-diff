@@ -24,6 +24,10 @@
 - Sección `## Deploy`: login con `deno deploy whoami`, alta con `deno deploy create` (`--entrypoint server/main.ts`, `--build-command "deno task build"`), KV con `database provision/assign --kind denokv`, detecta el entorno con `DENO_DEPLOY=1`.
 - Sin referencias a `deployctl`, `dash.deno.com` ni `DENO_DEPLOY_TOKEN` (Classic).
 
+### AC-16.4 — Config canónica de Deploy en deno.json
+- `deno.json` incluye la clave `deploy` con `org` (`enzoespergo`), `app` (`mi-boleteria-diff`), `install` (`npm --prefix web install`), `build` (`deno task build`) y `runtime: { type: "dynamic", entrypoint: "server/main.ts" }`.
+- Motivo: los flags de build pasados a `deno deploy create` no llegaron al server (el resumen mostraba `(n/a)` y la revision falló con "No build command configured / No runtime entrypoint provided"); el CLI prioriza esta sección sobre la config del dashboard.
+
 ### Enmiendas a S11 (realizadas por este slice)
 - `AC-11.1`: de `deployctl --entrypoint` a `deno deploy --app mi-boleteria-diff`.
 - `AC-11.3`: el README ya no exige `dash.deno.com` ni `DENO_DEPLOY_TOKEN`.

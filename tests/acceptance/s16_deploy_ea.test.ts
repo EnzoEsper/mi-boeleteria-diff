@@ -1,4 +1,4 @@
-import { assert, assertStringIncludes } from "@std/assert";
+import { assert, assertEquals, assertStringIncludes } from "@std/assert";
 
 const raiz = (ruta: string) => new URL(`../../${ruta}`, import.meta.url);
 
@@ -54,6 +54,22 @@ Deno.test("AC-16.2: start() no duplica el cron en EA y cierra la KV igual", asyn
     "el registro de start() debe quedar cubierto por el guard de EA o el de cron:false",
   );
   assert(main.includes("kv.close()"), "start() debe cerrar la KV al apagarse");
+});
+
+// ---------------------------------------------------------------------------
+// AC-16.4
+// ---------------------------------------------------------------------------
+
+Deno.test("AC-16.4: deno.json trae la config de Deploy (org/app/install/build/entrypoint)", async () => {
+  const denoJson = JSON.parse(await leer("deno.json"));
+  const cfg = denoJson.deploy;
+  assert(cfg, "falta la clave deploy en deno.json");
+  assertEquals(cfg.org, "enzoespergo", "falta deploy.org");
+  assertEquals(cfg.app, "mi-boleteria-diff", "falta deploy.app");
+  assertEquals(cfg.install, "npm --prefix web install", "falta deploy.install");
+  assertEquals(cfg.build, "deno task build", "falta deploy.build");
+  assertEquals(cfg.runtime?.type, "dynamic", "falta deploy.runtime.type");
+  assertEquals(cfg.runtime?.entrypoint, "server/main.ts", "falta deploy.runtime.entrypoint");
 });
 
 // ---------------------------------------------------------------------------
