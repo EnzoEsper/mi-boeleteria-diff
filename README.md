@@ -71,9 +71,11 @@ web/       Vite + React + TypeScript
 Despliegue en **Deno Deploy EA** — la plataforma activa (la versión clásica se apagó el 20-jul-2026). El proceso único de `server/main.ts` sirve **API + cron + estáticos** (`web/dist/` como fallback).
 
 1. **Login** (una vez): `deno deploy whoami` — abre el browser y guarda el token en el keyring del sistema.
-2. **Alta de la app** (una vez): `deno deploy create --app mi-boleteria-diff --source local --entrypoint server/main.ts --build-command "deno task build"` (o `deno deploy create` sin flags para el flujo interactivo).
-3. **KV gestionada:** `deno deploy database provision mi-boleteria-kv --kind denokv` y `deno deploy database assign mi-boleteria-kv --app mi-boleteria-diff` (también desde la consola → *Databases*). En EA la app abre `Deno.openKv()` sin path y usa esa base.
-4. **Deploy:** `deno task deploy` = `deno task build` (gate local) + `deno deploy --app mi-boleteria-diff --prod`.
+2. **Alta de la app** (una vez): `deno deploy create --app mi-boleteria-diff --source local --region us --no-wait` — la org sale de la clave `deploy.org` de `deno.json` (la sección `deploy` la consume el CLI: `org`/`app`; **el builder no la lee**). Los flags de build de `create` (`--build-command`, `--entrypoint`, …) no llegan al server: **la config de build efectiva se setea en el dashboard** → Settings → App configuration → Edit: install `npm --prefix web install`, build `deno task build`, runtime **Dynamic** con entrypoint `server/main.ts` y **Build memory 3072**.
+3. **KV gestionada:** `deno deploy database provision mi-boleteria-kv --kind denokv` y `deno deploy database assign mi-boleteria-kv --app mi-boleteria-diff` (también desde la consola → *Databases*; verificar con `deno deploy database list` — en algunos flujos la app ya nace con una asignada). En EA la app abre `Deno.openKv()` sin path y usa esa base.
+4. **Deploy:** `deno task deploy` = `deno task build` (gate local) + `deno deploy --app mi-boleteria-diff --prod`. URL: `https://mi-boleteria-diff.<org>.deno.net`.
+
+> **Usage (free):** los límites mensuales (memory time, requests, KV…) son **por organización**; excederlos pausa las apps hasta el siguiente ciclo. El cron maestro corre 2×/día (ver abajo) para no consumir el *memory time* — cada segundo con el isolate cargado se factura aunque esté idle.
 
 En EA la app detecta el entorno con `DENO_DEPLOY=1`: el cron maestro se registra **a nivel de módulo** en `server/main.ts` (requisito de descubrimiento de `Deno.cron()`); en local ese registro sigue dentro de `start()`. No hay variables de entorno obligatorias: `PORT` es opcional (default 8000). Los secretos nunca se committean (`.env*` está en `.gitignore`).
 

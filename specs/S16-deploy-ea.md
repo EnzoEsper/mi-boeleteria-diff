@@ -24,8 +24,9 @@
 - Sección `## Deploy`: login con `deno deploy whoami`, alta con `deno deploy create` (`--entrypoint server/main.ts`, `--build-command "deno task build"`), KV con `database provision/assign --kind denokv`, detecta el entorno con `DENO_DEPLOY=1`.
 - Sin referencias a `deployctl`, `dash.deno.com` ni `DENO_DEPLOY_TOKEN` (Classic).
 
-### AC-16.4 — Config canónica de Deploy en deno.json
-- `deno.json` incluye la clave `deploy` con: `org` (`enzoespergo`) y `app` (`mi-boleteria-diff`) — **obligatorias para el parser del CLI**, sin ellas `deno deploy` falla con `Failed to parse "deploy" configuration: missing field org` — más `install` (`npm --prefix web install`), `build` (`deno task build`) y `runtime: { type: "dynamic", entrypoint: "server/main.ts" }` (opciones de app configuration de la spec de Builds).
+### AC-16.4 — Config canónica de Deploy en deno.json *(enmendado: org `espern4`)*
+- `deno.json` incluye la clave `deploy` con: `org` (`espern4` — org nueva creada el 27-sep-2026 tras agotar la cuota de `enzoespergo`; la cláusula es **obligatoria para el parser del CLI**, sin ella `deno deploy` falla con `Failed to parse "deploy" configuration: missing field org`) y `app` (`mi-boleteria-diff`) — más `install` (`npm --prefix web install`), `build` (`deno task build`) y `runtime: { type: "dynamic", entrypoint: "server/main.ts" }`.
+- **Aclaración (cierre A):** `install`/`build`/`runtime` del archivo **no los lee el builder** — la config de build efectiva vive en el **dashboard** (Settings → App configuration: install, build, dynamic/entrypoint, build memory 3072). El CLI solo consume `org`/`app` del archivo; los flags de build de `deno deploy create` tampoco aplican.
 - Motivo: los flags de build pasados a `deno deploy create` no llegaron al server (el resumen mostraba `(n/a)` y la revision falló con "No build command configured / No runtime entrypoint provided").
 
 ### Enmiendas a S11 (realizadas por este slice)

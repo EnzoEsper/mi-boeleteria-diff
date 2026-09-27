@@ -64,7 +64,7 @@ Deno.test("AC-16.4: deno.json trae la config de Deploy (org/app/install/build/en
   const denoJson = JSON.parse(await leer("deno.json"));
   const cfg = denoJson.deploy;
   assert(cfg, "falta la clave deploy en deno.json");
-  assertEquals(cfg.org, "enzoespergo", "falta deploy.org (la exige el parser del CLI)");
+  assertEquals(cfg.org, "espern4", "falta deploy.org (la exige el parser del CLI)");
   assertEquals(cfg.app, "mi-boleteria-diff", "falta deploy.app");
   assertEquals(cfg.install, "npm --prefix web install", "falta deploy.install");
   assertEquals(cfg.build, "deno task build", "falta deploy.build");
