@@ -1,4 +1,4 @@
-import { cronTick, registerMasterCron } from "./cron.ts";
+import { cronTick, masterCronExpr, registerMasterCron } from "./cron.ts";
 import { createApp } from "./router.ts";
 
 export interface OpcionesDeInicio {
@@ -15,7 +15,7 @@ type DenoCronFn = (name: string, expression: string, handler: () => Promise<void
 // propia KV (la gestionada asignada al app, sin path).
 const denoCron = (Deno as unknown as { cron?: DenoCronFn }).cron;
 if (Deno.env.get("DENO_DEPLOY") === "1" && typeof denoCron === "function") {
-  denoCron("scheduler-deploy", "* * * * *", async () => {
+  denoCron("scheduler-deploy", masterCronExpr(), async () => {
     const kv = await Deno.openKv();
     try {
       await cronTick(kv);

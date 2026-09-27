@@ -137,26 +137,29 @@ Deno.test("AC-5.3: un fallo o cronExpr inválido no abortan el pase", async () =
 // AC-5.4
 // ---------------------------------------------------------------------------
 
-Deno.test("AC-5.4: matchesCron evalúa la ventana del minuto", () => {
+Deno.test("AC-5.4 (enmendado en S17): matchesCron evalúa la ventana (desde, hasta]", () => {
   const cada15 = "*/15 * * * *";
-  assertEquals(matchesCron(cada15, localDate(2026, 9, 26, 14, 0)), true);
-  assertEquals(matchesCron(cada15, localDate(2026, 9, 26, 14, 15)), true);
-  assertEquals(matchesCron(cada15, localDate(2026, 9, 26, 14, 30)), true);
-  assertEquals(matchesCron(cada15, localDate(2026, 9, 26, 14, 45)), true);
-  assertEquals(matchesCron(cada15, localDate(2026, 9, 26, 14, 7)), false);
+  const d = (h: number, m: number) => localDate(2026, 9, 26, h, m);
 
-  assertEquals(matchesCron("0 3 * * *", localDate(2026, 9, 26, 3, 0)), true);
-  assertEquals(matchesCron("0 3 * * *", localDate(2026, 9, 26, 3, 1)), false);
+  assertEquals(matchesCron(cada15, d(14, 0), d(14, 16)), true, "14:15 cae en (14:00, 14:16]");
+  assertEquals(matchesCron(cada15, d(14, 0), d(14, 15)), true, "14:15 es inclusive");
+  assertEquals(matchesCron(cada15, d(14, 0), d(14, 14)), false, "la próxima (14:15) pasa de hasta");
 
-  assertEquals(matchesCron("* * * * *", localDate(2026, 9, 26, 14, 7)), true);
-  assertEquals(matchesCron("* * * * *", localDate(2026, 1, 1, 0, 0)), true);
+  assertEquals(matchesCron(cada15, d(14, 0), d(14, 0)), false, "ventana vacía: inicio estricto");
+  assertEquals(matchesCron(cada15, d(13, 59), d(14, 0)), true, "14:00 > 13:59 y ≤ 14:00");
+
+  assertEquals(matchesCron("0 3 * * *", d(2, 0), d(3, 0)), true, "ocurrencia 03:00 en (02:00, 03:00]");
+  assertEquals(matchesCron("0 3 * * *", d(3, 0), d(3, 1)), false, "desde 03:00 la próxima es mañana");
+
+  assertEquals(matchesCron("* * * * *", d(14, 7), d(14, 8)), true);
+  assertEquals(matchesCron("* * * * *", d(14, 7), d(14, 7)), false, "ventana vacía nunca dispara");
 });
 
 // ---------------------------------------------------------------------------
 // AC-5.5
 // ---------------------------------------------------------------------------
 
-Deno.test("AC-5.5: el cronExpr decide qué fuentes se procesan en cada tick", async () => {
+Deno.test("AC-5.5 (enmendado en S17): el cronExpr decide por ventana desde el último tick", async () => {
   await withKv(async (kv) => {
     const cada15 = await createSource(kv, {
       name: "Cada 15",
@@ -166,6 +169,8 @@ Deno.test("AC-5.5: el cronExpr decide qué fuentes se procesan en cada tick", as
     });
     const siempre = await createSource(kv, { name: "Siempre", url: `${VALID_URL}?siem`, cronEnabled: true });
 
+    // masterTick a las 14:01: la ocurrencia 14:00 queda fuera de (14:01, 14:07].
+    await kv.set(["masterTick"], localDate(2026, 9, 26, 14, 1).getTime());
     const fueraDeVentana = await cronTick(kv, {
       fetchImpl: fetchContador([], {}),
       now: localDate(2026, 9, 26, 14, 7),
@@ -173,8 +178,8 @@ Deno.test("AC-5.5: el cronExpr decide qué fuentes se procesan en cada tick", as
     assertEquals(fueraDeVentana.ok, [siempre.id]);
     assertEquals(fueraDeVentana.skipped, [cada15.id]);
     assertEquals(await getLatestTimestamp(kv, cada15.id), null);
-    assert((await getLatestTimestamp(kv, siempre.id)) !== null);
 
+    // (14:01, 14:15] contiene 14:15 → dispara.
     const enVentana = await cronTick(kv, {
       fetchImpl: fetchContador([], {}),
       now: localDate(2026, 9, 26, 14, 15),
@@ -185,6 +190,14 @@ Deno.test("AC-5.5: el cronExpr decide qué fuentes se procesan en cada tick", as
     const snapshot = await getSnapshot(kv, cada15.id, ts);
     assert(snapshot);
     assertEquals(snapshot.trigger, "cron");
+
+    // masterTick quedó en 14:15: (14:15, 14:16] no vuelve a disparar.
+    const siguiente = await cronTick(kv, {
+      fetchImpl: fetchContador([], {}),
+      now: localDate(2026, 9, 26, 14, 16),
+    });
+    assertEquals(siguiente.ok, [siempre.id], "cronExpr null se procesa en cada tick");
+    assertEquals(siguiente.skipped, [cada15.id], "sin doble capture");
   });
 });
 
@@ -192,11 +205,11 @@ Deno.test("AC-5.5: el cronExpr decide qué fuentes se procesan en cada tick", as
 // AC-5.6
 // ---------------------------------------------------------------------------
 
-Deno.test("AC-5.6: main.ts registra el cron maestro con guard en Deno.cron", async () => {
+Deno.test("AC-5.6 (enmendado en S17): main.ts registra el cron maestro con guard en Deno.cron", async () => {
   const cronSource = await Deno.readTextFile(new URL("../../server/cron.ts", import.meta.url));
   assert(cronSource.includes("export function registerMasterCron"));
   assert(cronSource.includes('"scheduler"'), "nombre del cron maestro");
-  assert(cronSource.includes('"* * * * *"'), "cadencia fija cada minuto");
+  assert(cronSource.includes("masterCronExpr()"), "la cadencia viene de masterCronExpr (no hardcodeada)");
   assert(cronSource.includes("cronTick"), "el handler delega en cronTick");
   assert(
     /typeof denoCron !== "function"/.test(cronSource),

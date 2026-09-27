@@ -69,6 +69,10 @@ export function statsKey(sourceId: string): Deno.KvKey {
   return [...STATS_PREFIX, sourceId];
 }
 
+export function masterTickKey(): Deno.KvKey {
+  return ["masterTick"];
+}
+
 export async function createSource(kv: Deno.Kv, input: SourceInput): Promise<Source> {
   const source: Source = {
     id: crypto.randomUUID(),

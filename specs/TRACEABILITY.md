@@ -89,3 +89,7 @@ Regenerada/actualizada en el paso ⑥ de cada micro-loop. `deno task spec:check`
 | AC-16.2 | specs/S16-deploy-ea.md | tests/acceptance/s16_deploy_ea.test.ts | 16 | verde |
 | AC-16.3 | specs/S16-deploy-ea.md | tests/acceptance/s16_deploy_ea.test.ts | 16 | verde |
 | AC-16.4 | specs/S16-deploy-ea.md | tests/acceptance/s16_deploy_ea.test.ts | 16 | verde |
+| AC-17.1 | specs/S17-cron-baja-frecuencia.md | tests/acceptance/s17_cron_baja_frecuencia.test.ts | 17 | verde |
+| AC-17.2 | specs/S17-cron-baja-frecuencia.md | tests/acceptance/s17_cron_baja_frecuencia.test.ts | 17 | verde |
+| AC-17.3 | specs/S17-cron-baja-frecuencia.md | tests/acceptance/s17_cron_baja_frecuencia.test.ts | 17 | verde |
+| AC-17.4 | specs/S17-cron-baja-frecuencia.md | tests/acceptance/s17_cron_baja_frecuencia.test.ts | 17 | verde |

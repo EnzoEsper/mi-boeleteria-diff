@@ -76,3 +76,10 @@ Despliegue en **Deno Deploy EA** — la plataforma activa (la versión clásica 
 4. **Deploy:** `deno task deploy` = `deno task build` (gate local) + `deno deploy --app mi-boleteria-diff --prod`.
 
 En EA la app detecta el entorno con `DENO_DEPLOY=1`: el cron maestro se registra **a nivel de módulo** en `server/main.ts` (requisito de descubrimiento de `Deno.cron()`); en local ese registro sigue dentro de `start()`. No hay variables de entorno obligatorias: `PORT` es opcional (default 8000). Los secretos nunca se committean (`.env*` está en `.gitignore`).
+
+### Variables de entorno (cron y fetch)
+
+- **`MASTER_CRON`** — cadencia del cron maestro. Default **`0 9,21 * * *`** (dos veces por día, 9:00 y 21:00); una env vacía o inválida cae al default. En Deploy se cambia **sin rebuild**: `deno deploy env add MASTER_CRON "0 7,19 * * *"`.
+- **`FETCH_TIMEOUT_MS`** — timeout de cada fetch de fuente (default `15000`). Evita que una red colgada mantenga cargado el isolate y consuma *memory time*.
+
+El maestro no evalúa el `cronExpr` de cada fuente en el minuto puntual sino en la **ventana desde el último tick** (`(último tick, ahora]`, guardado en KV como `["masterTick"]`; el primer tick usa las últimas 24 h). Por eso una fuente con `0 12 * * *` dispara aunque el maestro corra solo a las 9:00 y 21:00. **La frecuencia efectiva de una fuente nunca supera la del maestro**: un `*/5 * * * *` con el maestro 2×/día termina capturando 2 veces por día.

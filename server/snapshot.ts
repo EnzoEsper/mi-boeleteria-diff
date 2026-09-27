@@ -18,6 +18,14 @@ export type FetchLike = (input: string | URL | Request, init?: RequestInit) => P
 
 export const FULL_EVERY_DEFAULT = 20;
 
+export const FETCH_TIMEOUT_DEFAULT_MS = 15_000;
+
+export function fetchTimeoutMs(): number {
+  const raw = Deno.env.get("FETCH_TIMEOUT_MS");
+  const n = raw === undefined ? NaN : Number(raw);
+  return Number.isFinite(n) && n > 0 ? n : FETCH_TIMEOUT_DEFAULT_MS;
+}
+
 export interface SnapshotOptions {
   fullEvery?: number;
 }
@@ -45,7 +53,10 @@ export async function fetchAndStore(
 ): Promise<Snapshot> {
   let text: string;
   try {
-    const response = await fetchImpl(source.url, { headers: source.headers });
+    const response = await fetchImpl(source.url, {
+      headers: source.headers,
+      signal: AbortSignal.timeout(fetchTimeoutMs()),
+    });
     if (!response.ok) throw new FetchSourceError(`HTTP ${response.status} al fetchear ${source.url}`);
     text = await response.text();
   } catch (error) {
