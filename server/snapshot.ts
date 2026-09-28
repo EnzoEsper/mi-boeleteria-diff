@@ -41,6 +41,7 @@ async function recordError(kv: Deno.Kv, sourceId: string, message: string): Prom
   const stats = await getStats(kv, sourceId);
   stats.errorCount += 1;
   stats.lastError = { message, at: Date.now() };
+  stats.lastAttempt = { at: stats.lastError.at, ok: false };
   await saveStats(kv, sourceId, stats);
 }
 
@@ -148,6 +149,7 @@ export async function ingestText(
   const stats = await getStats(kv, source.id);
   stats.totalSnapshots += 1;
   if (changed) stats.lastChangedAt = timestamp;
+  stats.lastAttempt = { at: Date.now(), ok: true };
   await saveStats(kv, source.id, stats);
 
   return snapshot;

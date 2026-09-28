@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import type { ActualizarFuenteInput, CrearFuenteInput, FetchResponse, Fuente } from "./api.ts";
+import type { ActualizarFuenteInput, CrearFuenteInput, FetchResponse, Fuente, StatsFuente } from "./api.ts";
 import { CronInput, esCronValida } from "./CronInput.tsx";
 import { mensajeDe } from "./mensajes.ts";
 import { SourceCard } from "./SourceCard.tsx";
@@ -11,6 +11,7 @@ export interface FuentesApi {
   fetchNow(id: string): Promise<FetchResponse>;
   importFile(id: string, file: File): Promise<FetchResponse>;
   deleteSource(id: string): Promise<{ deleted: string }>;
+  getStats(id: string): Promise<StatsFuente>;
 }
 
 export function FuentesPage({

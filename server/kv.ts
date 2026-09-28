@@ -44,10 +44,11 @@ export interface SourceStats {
   lastChangedAt: number | null;
   errorCount: number;
   lastError: { message: string; at: number } | null;
+  lastAttempt: { at: number; ok: boolean } | null;
 }
 
 export function emptyStats(): SourceStats {
-  return { totalSnapshots: 0, lastChangedAt: null, errorCount: 0, lastError: null };
+  return { totalSnapshots: 0, lastChangedAt: null, errorCount: 0, lastError: null, lastAttempt: null };
 }
 
 const SOURCE_PREFIX = ["source"];
@@ -156,7 +157,8 @@ export async function setLatestTimestamp(kv: Deno.Kv, sourceId: string, timestam
 
 export async function getStats(kv: Deno.Kv, sourceId: string): Promise<SourceStats> {
   const entry = await kv.get<SourceStats>(statsKey(sourceId));
-  return entry.value ?? emptyStats();
+  // merge con emptyStats: las entradas viejas (sin lastAttempt) normalizan a null
+  return { ...emptyStats(), ...(entry.value ?? {}) };
 }
 
 export async function saveStats(kv: Deno.Kv, sourceId: string, stats: SourceStats): Promise<void> {

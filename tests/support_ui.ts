@@ -26,6 +26,7 @@ export function apiStub(sobrescribir: Partial<Api>): Api {
     importFile: noImplementado as Api["importFile"],
     deleteSource: noImplementado as Api["deleteSource"],
     updateSource: noImplementado as Api["updateSource"],
+    getStats: noImplementado as Api["getStats"],
     ...sobrescribir,
   };
 }

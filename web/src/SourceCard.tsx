@@ -1,13 +1,15 @@
-import { useState, type FormEvent } from "react";
-import type { ActualizarFuenteInput, FetchResponse, Fuente } from "./api.ts";
+import { useEffect, useState, type FormEvent } from "react";
+import type { ActualizarFuenteInput, FetchResponse, Fuente, StatsFuente } from "./api.ts";
 import { CronInput, esCronValida } from "./CronInput.tsx";
 import { mensajeDe } from "./mensajes.ts";
+import { formatearMomento } from "./tiempo.ts";
 
 export interface SourceCardApi {
   fetchNow(id: string): Promise<FetchResponse>;
   importFile(id: string, file: File): Promise<FetchResponse>;
   deleteSource(id: string): Promise<{ deleted: string }>;
   updateSource(id: string, patch: ActualizarFuenteInput): Promise<Fuente>;
+  getStats(id: string): Promise<StatsFuente>;
 }
 
 export function SourceCard({
@@ -29,6 +31,19 @@ export function SourceCard({
   const [nombreEdit, setNombreEdit] = useState("");
   const [cronEdit, setCronEdit] = useState("");
   const [cronActivo, setCronActivo] = useState(false);
+  const [stats, setStats] = useState<StatsFuente | null>(null);
+
+  async function recargarStats(): Promise<void> {
+    try {
+      setStats(await api.getStats(fuente.id));
+    } catch {
+      setStats(null);
+    }
+  }
+
+  useEffect(() => {
+    void recargarStats();
+  }, [fuente.id]);
 
   async function capturar(): Promise<void> {
     try {
@@ -37,6 +52,8 @@ export function SourceCard({
       setError(null);
     } catch (err: unknown) {
       setError(mensajeDe(err));
+    } finally {
+      await recargarStats();
     }
   }
 
@@ -48,6 +65,8 @@ export function SourceCard({
       setError(null);
     } catch (err: unknown) {
       setError(mensajeDe(err));
+    } finally {
+      await recargarStats();
     }
   }
 
@@ -151,6 +170,17 @@ export function SourceCard({
             Borrar
           </button>
         </>
+      )}
+      {!editando && stats?.lastAttempt && stats.lastAttempt.ok === true && (
+        <span className="stats" data-stats="ok">
+          última: {formatearMomento(stats.lastAttempt.at)}
+        </span>
+      )}
+      {!editando && stats?.lastAttempt && stats.lastAttempt.ok === false && (
+        <span className="error" data-stats="error">
+          falló {formatearMomento(stats.lastAttempt.at)}: {stats.lastError?.message ?? "captura fallida"}
+          {stats.errorCount > 1 ? ` (×${stats.errorCount})` : ""}
+        </span>
       )}
       {mensaje && <span className="resultado">{mensaje}</span>}
       {error && <span className="error">{error}</span>}

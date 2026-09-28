@@ -45,6 +45,14 @@ export interface ActualizarFuenteInput {
   cronEnabled?: boolean;
 }
 
+export interface StatsFuente {
+  totalSnapshots: number;
+  lastChangedAt: number | null;
+  errorCount: number;
+  lastError: { message: string; at: number } | null;
+  lastAttempt: { at: number; ok: boolean } | null;
+}
+
 export interface SnapshotResumen {
   timestamp: number;
   hash: string;
@@ -136,6 +144,7 @@ export function createApi(fetchImpl: FetchLike = fetch) {
   return {
     listSources: (): Promise<Fuente[]> => get("/api/sources") as Promise<Fuente[]>,
     getSource: (id: string): Promise<Fuente> => get(`/api/sources/${id}`) as Promise<Fuente>,
+    getStats: (id: string): Promise<StatsFuente> => get(`/api/sources/${id}/stats`) as Promise<StatsFuente>,
     createSource: (input: CrearFuenteInput): Promise<Fuente> =>
       post("/api/sources", {
         headers: { "content-type": "application/json" },

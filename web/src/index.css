@@ -165,6 +165,16 @@ button:hover {
   color: var(--ok);
 }
 
+.stats {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  background: var(--bg-soft);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
 .flag {
   font-family: var(--mono);
   font-size: 13px;
