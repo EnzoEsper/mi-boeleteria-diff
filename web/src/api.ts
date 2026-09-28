@@ -98,13 +98,13 @@ async function lanzarSiError(res: Response): Promise<void> {
 
 export function createApi(fetchImpl: FetchLike = fetch) {
   async function get(path: string): Promise<unknown> {
-    const res = await fetchImpl(`http://localhost${path}`);
+    const res = await fetchImpl(`${path}`);
     await lanzarSiError(res);
     return await res.json();
   }
 
   async function post(path: string, init?: RequestInit): Promise<unknown> {
-    const res = await fetchImpl(`http://localhost${path}`, { method: "POST", ...init });
+    const res = await fetchImpl(`${path}`, { method: "POST", ...init });
     await lanzarSiError(res);
     return await res.json();
   }

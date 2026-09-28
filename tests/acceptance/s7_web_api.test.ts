@@ -30,15 +30,15 @@ Deno.test("AC-7.1: createApi ejecuta los requests del contrato", async () => {
   const api = createApi(fetchImpl);
 
   await api.listSources();
-  assertEquals([llamadas[0].url, llamadas[0].init?.method], ["http://localhost/api/sources", undefined]);
+  assertEquals([llamadas[0].url, llamadas[0].init?.method], ["/api/sources", undefined]);
 
   await api.getSource("abc");
-  assertEquals(llamadas[1].url, "http://localhost/api/sources/abc");
+  assertEquals(llamadas[1].url, "/api/sources/abc");
 
   const payload = { name: "MB", type: "file" as const };
   await api.createSource(payload);
   const post = llamadas[2];
-  assertEquals(post.url, "http://localhost/api/sources");
+  assertEquals(post.url, "/api/sources");
   assertEquals(post.init?.method, "POST");
   assertEquals(
     (post.init?.headers as Record<string, string>)["content-type"],
@@ -47,16 +47,16 @@ Deno.test("AC-7.1: createApi ejecuta los requests del contrato", async () => {
   assertEquals(post.init?.body, JSON.stringify(payload));
 
   await api.fetchNow("abc");
-  assertEquals([llamadas[3].url, llamadas[3].init?.method], ["http://localhost/api/sources/abc/fetch", "POST"]);
+  assertEquals([llamadas[3].url, llamadas[3].init?.method], ["/api/sources/abc/fetch", "POST"]);
 
   await api.listSnapshots("abc");
-  assertEquals(llamadas[4].url, "http://localhost/api/sources/abc/snapshots");
+  assertEquals(llamadas[4].url, "/api/sources/abc/snapshots");
 
   await api.getSnapshot("abc", 1727400000000);
-  assertEquals(llamadas[5].url, "http://localhost/api/sources/abc/snapshots/1727400000000");
+  assertEquals(llamadas[5].url, "/api/sources/abc/snapshots/1727400000000");
 
   await api.getDiff("abc", 111, 222);
-  assertEquals(llamadas[6].url, "http://localhost/api/sources/abc/diff?from=111&to=222");
+  assertEquals(llamadas[6].url, "/api/sources/abc/diff?from=111&to=222");
   assertEquals(llamadas[6].init?.method, undefined, "GET no lleva method explícito");
 });
 
@@ -81,7 +81,7 @@ Deno.test("AC-7.2: importFile sube multipart con la parte file", async () => {
 
   assertEquals(resultado, cuerpo);
   const llamada = llamadas[0];
-  assertEquals(llamada.url, "http://localhost/api/sources/abc/import");
+  assertEquals(llamada.url, "/api/sources/abc/import");
   assertEquals(llamada.init?.method, "POST");
   assertEquals(llamada.init?.headers, undefined, "el content-type con boundary lo arma fetch");
   const form = llamada.init?.body;
