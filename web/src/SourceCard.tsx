@@ -134,10 +134,10 @@ export function SourceCard({
   }
 
   return (
-    <li data-tipo={fuente.type}>
+    <li data-tipo={fuente.type} className="fuente">
       <strong>{fuente.name}</strong> <span className="badge">{fuente.type}</span>
       {editando ? (
-        <form data-form-editar onSubmit={(event) => void guardar(event)}>
+        <form className="editar" data-form-editar onSubmit={(event) => void guardar(event)}>
           <input
             placeholder="Nombre"
             value={nombreEdit}
@@ -186,7 +186,7 @@ export function SourceCard({
               onChange={(event) => void importar(event.target.files?.[0])}
             />
           )}
-          <button type="button" disabled={borrando} onClick={borrar}>
+          <button type="button" className="peligro" disabled={borrando} onClick={borrar}>
             Borrar
           </button>
         </>

@@ -156,6 +156,18 @@ button:hover {
   border: 1px solid var(--accent-border);
 }
 
+.badge-ok {
+  background: var(--ok-bg);
+  color: var(--ok);
+  border: 1px solid var(--ok);
+}
+
+.badge-neutro {
+  background: var(--bg-soft);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
 .resultado {
   display: inline-block;
   padding: 2px 8px;
@@ -182,6 +194,59 @@ button:hover {
   background: var(--bg-soft);
   color: var(--text);
   font-size: 15px;
+}
+
+.fuentes {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.fuente {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  align-items: center;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.alta,
+.editar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.alta input,
+.alta select,
+.editar input,
+.editar select {
+  flex: 1 1 160px;
+  min-width: 0;
+}
+
+.peligro {
+  color: var(--err);
+  background: var(--err-bg);
+  border: 1px solid var(--err);
+}
+
+[data-json] {
+  margin: 8px 0 0;
+  padding: 12px;
+  max-height: 420px;
+  overflow: auto;
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.5;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  white-space: pre;
 }
 
 .flag {
@@ -290,6 +355,30 @@ button:hover {
 }
 
 @media (max-width: 720px) {
+  #root {
+    padding: 16px 12px 48px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .alta,
+  .editar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .alta input,
+  .alta select,
+  .alta button,
+  .editar input,
+  .editar select,
+  .editar button {
+    flex: none;
+    width: 100%;
+  }
+
   .timeline li {
     flex-direction: column;
     align-items: flex-start;

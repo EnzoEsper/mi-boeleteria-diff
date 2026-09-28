@@ -86,7 +86,7 @@ export function FuentesPage({
         </p>
       )}
       {fuentes.length > 0 && (
-        <ul>
+        <ul className="fuentes">
           {fuentes.map((fuente) => (
             <SourceCard
               key={fuente.id}
@@ -101,7 +101,7 @@ export function FuentesPage({
         </ul>
       )}
 
-      <form onSubmit={(event) => void crear(event)}>
+      <form className="alta" onSubmit={(event) => void crear(event)}>
         <input
           placeholder="Nombre"
           value={nombre}

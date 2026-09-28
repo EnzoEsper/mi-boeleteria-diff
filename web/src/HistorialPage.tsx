@@ -212,7 +212,9 @@ export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCom
             <code>{entrada.hash.slice(0, 8)}</code>
             <span>{entrada.sizeBytes} B</span>
             <span className="trigger">{entrada.trigger}</span>
-            <span className="badge">{entrada.changed ? "cambió" : "sin cambios"}</span>
+            <span className={entrada.changed ? "badge badge-ok" : "badge badge-neutro"}>
+              {entrada.changed ? "cambió" : "sin cambios"}
+            </span>
             {entrada.sinceBase !== null && <span className="flag">base hace {entrada.sinceBase}</span>}
             {entrada.deltaFrom !== null && (
               <span className="flag">delta de {formatearMomento(entrada.deltaFrom)}</span>

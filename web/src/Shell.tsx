@@ -48,7 +48,7 @@ function HistorialRuta({ api }: { api: Api }) {
   }, [api, id]);
 
   if (comparacion === undefined) return <Navigate replace to={`/historial/${String(id)}`} />;
-  if (cargando) return <p>Cargando…</p>;
+  if (cargando) return <p data-cargando>Cargando…</p>;
   if (error || !fuente) return <p className="error">{error ?? "Fuente no encontrada"}</p>;
   return (
     <HistorialPage
