@@ -22,6 +22,8 @@ export type SourceInput = {
   cronEnabled?: boolean;
 };
 
+export type SourcePatch = Partial<Pick<Source, "name" | "url" | "headers" | "cronExpr" | "cronEnabled">>;
+
 export type SnapshotTrigger = "manual" | "cron" | "import";
 
 export interface Snapshot {
@@ -99,6 +101,15 @@ export async function listSources(kv: Deno.Kv): Promise<Source[]> {
 export async function getSource(kv: Deno.Kv, id: string): Promise<Source | null> {
   const entry = await kv.get<Source>(sourceKey(id));
   return entry.value;
+}
+
+export async function updateSource(kv: Deno.Kv, id: string, patch: SourcePatch): Promise<Source | null> {
+  const entry = await kv.get<Source>(sourceKey(id));
+  const previa = entry.value;
+  if (!previa) return null;
+  const actualizada: Source = { ...previa, ...patch };
+  await kv.set(sourceKey(id), actualizada);
+  return actualizada;
 }
 
 export async function deleteSource(kv: Deno.Kv, id: string): Promise<boolean> {

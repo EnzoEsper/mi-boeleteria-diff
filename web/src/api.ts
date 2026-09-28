@@ -37,6 +37,14 @@ export interface CrearFuenteInput {
   cronEnabled?: boolean;
 }
 
+export interface ActualizarFuenteInput {
+  name?: string;
+  url?: string;
+  headers?: Record<string, string>;
+  cronExpr?: string | null;
+  cronEnabled?: boolean;
+}
+
 export interface SnapshotResumen {
   timestamp: number;
   hash: string;
@@ -115,6 +123,16 @@ export function createApi(fetchImpl: FetchLike = fetch) {
     return await res.json();
   }
 
+  async function patch(path: string, body: unknown): Promise<unknown> {
+    const res = await fetchImpl(`${path}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    await lanzarSiError(res);
+    return await res.json();
+  }
+
   return {
     listSources: (): Promise<Fuente[]> => get("/api/sources") as Promise<Fuente[]>,
     getSource: (id: string): Promise<Fuente> => get(`/api/sources/${id}`) as Promise<Fuente>,
@@ -138,6 +156,8 @@ export function createApi(fetchImpl: FetchLike = fetch) {
     },
     deleteSource: (id: string): Promise<{ deleted: string }> =>
       del(`/api/sources/${id}`) as Promise<{ deleted: string }>,
+    updateSource: (id: string, input: ActualizarFuenteInput): Promise<Fuente> =>
+      patch(`/api/sources/${id}`, input) as Promise<Fuente>,
   };
 }
 

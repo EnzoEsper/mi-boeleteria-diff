@@ -70,7 +70,7 @@ async function montarForm(): Promise<ContextoForm> {
         url: input.url ?? "",
         headers: {},
         cronExpr: input.cronExpr ?? null,
-        cronEnabled: input.cronExpr != null,
+        cronEnabled: input.cronEnabled ?? false,
         createdAt: "2026-09-26T12:00:00.000Z",
       });
     },
@@ -92,6 +92,7 @@ Deno.test("AC-13.2: el alta con cron válido envía cronExpr y con vacío va sin
       type: "url",
       url: "https://x.test/a.json",
       cronExpr: "*/5 * * * *",
+      cronEnabled: true,
     });
   } finally {
     await ctx.pagina.desmontar();
@@ -119,6 +120,7 @@ Deno.test("AC-13.2: sin cron va sin cronExpr y con tipo file no aparece el campo
       name: "MB",
       type: "url",
       url: "https://x.test/a.json",
+      cronEnabled: true,
     });
   } finally {
     await sinCron.pagina.desmontar();

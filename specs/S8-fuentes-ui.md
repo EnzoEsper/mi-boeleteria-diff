@@ -22,7 +22,7 @@
 - Si `fetchNow` lanza `ApiError(502)`, se muestra su mensaje y la página no se rompe.
 
 ### AC-8.4 — Alta de fuente con validación del backend
-- Submit del form con nombre y url → `createSource({ name, type: "url", url })`; la fuente nueva aparece en el listado sin recargar la página y el form se limpia.
+- Submit del form con nombre y url → `createSource({ name, type: "url", url, cronEnabled: true })` (el `cronEnabled: true` es una enmienda de S21/AC-21.5: el alta URL corre cron por defecto); la fuente nueva aparece en el listado sin recargar la página y el form se limpia.
 - Si el backend responde `ApiError(400)` con `issues`, se muestra el mensaje del primer issue.
 - Con `type: "file"` no se envía `url` (coincide con el contrato de AC-6.1).
 

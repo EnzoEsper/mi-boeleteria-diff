@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { z } from "zod";
 import { diffJson } from "./diff.ts";
-import { createSource, deleteSource, getSource, getSnapshot, listSnapshots, listSources } from "./kv.ts";
+import { createSource, deleteSource, getSource, getSnapshot, listSnapshots, listSources, updateSource } from "./kv.ts";
 import {
   fetchAndStore,
   FetchSourceError,
@@ -27,6 +27,17 @@ export const sourceInputSchema = z.object({
     ctx.addIssue({ code: "custom", path: ["url"], message: "url es requerida para type url" });
   }
 });
+
+export const sourcePatchSchema = z.object({
+  name: z.string().trim().min(1).optional(),
+  url: z
+    .url()
+    .refine((value) => value.startsWith("http://") || value.startsWith("https://"))
+    .optional(),
+  headers: z.record(z.string(), z.string()).optional(),
+  cronExpr: z.string().nullable().optional(),
+  cronEnabled: z.boolean().optional(),
+}).refine((value) => Object.keys(value).length > 0, { message: "sin campos para actualizar" });
 
 export const diffQuerySchema = z.object({
   from: z.coerce.number().int(),
@@ -75,6 +86,22 @@ export function createApp(kv: Deno.Kv, deps: AppDeps = {}): Hono {
     const borrada = await deleteSource(kv, id);
     if (!borrada) return c.json({ error: "fuente no encontrada" }, 404);
     return c.json({ deleted: id });
+  });
+
+  app.patch("/api/sources/:id", async (c) => {
+    let raw: unknown = null;
+    try {
+      raw = await c.req.json();
+    } catch {
+      raw = null;
+    }
+    const parsed = sourcePatchSchema.safeParse(raw);
+    if (!parsed.success) {
+      return c.json({ error: "validación fallida", issues: issuesDe(parsed.error) }, 400);
+    }
+    const actualizada = await updateSource(kv, c.req.param("id"), parsed.data);
+    if (!actualizada) return c.json({ error: "fuente no encontrada" }, 404);
+    return c.json(actualizada);
   });
 
   app.post("/api/sources/:id/fetch", async (c) => {

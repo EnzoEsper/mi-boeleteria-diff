@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import type { CrearFuenteInput, FetchResponse, Fuente } from "./api.ts";
+import type { ActualizarFuenteInput, CrearFuenteInput, FetchResponse, Fuente } from "./api.ts";
 import { CronInput, esCronValida } from "./CronInput.tsx";
 import { mensajeDe } from "./mensajes.ts";
 import { SourceCard } from "./SourceCard.tsx";
@@ -7,6 +7,7 @@ import { SourceCard } from "./SourceCard.tsx";
 export interface FuentesApi {
   listSources(): Promise<Fuente[]>;
   createSource(input: CrearFuenteInput): Promise<Fuente>;
+  updateSource(id: string, patch: ActualizarFuenteInput): Promise<Fuente>;
   fetchNow(id: string): Promise<FetchResponse>;
   importFile(id: string, file: File): Promise<FetchResponse>;
   deleteSource(id: string): Promise<{ deleted: string }>;
@@ -54,7 +55,7 @@ export function FuentesPage({
       return;
     }
     const input: CrearFuenteInput = tipo === "url"
-      ? { name: nombre, type: "url", url, ...(cron !== "" ? { cronExpr: cron } : {}) }
+      ? { name: nombre, type: "url", url, cronEnabled: true, ...(cron !== "" ? { cronExpr: cron } : {}) }
       : { name: nombre, type: "file" };
     try {
       const creada = await api.createSource(input);
@@ -81,6 +82,8 @@ export function FuentesPage({
             fuente={fuente}
             onVerHistorial={onVerHistorial}
             onBorrada={(id) => setFuentes((prev) => prev.filter((f) => f.id !== id))}
+            onActualizada={(actualizada) =>
+              setFuentes((prev) => prev.map((f) => (f.id === actualizada.id ? actualizada : f)))}
           />
         ))}
       </ul>

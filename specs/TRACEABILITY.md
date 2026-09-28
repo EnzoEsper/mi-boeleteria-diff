@@ -105,3 +105,8 @@ Regenerada/actualizada en el paso ⑥ de cada micro-loop. `deno task spec:check`
 | AC-20.2 | specs/S20-borrar-fuente.md | tests/acceptance/s20_borrar_fuente.test.ts | 20 | verde |
 | AC-20.3 | specs/S20-borrar-fuente.md | tests/acceptance/s20_borrar_fuente.test.ts | 20 | verde |
 | AC-20.4 | specs/S20-borrar-fuente.md | tests/acceptance/s20_borrar_fuente.test.ts | 20 | verde |
+| AC-21.1 | specs/S21-editar-fuente.md | tests/acceptance/s21_editar_fuente.test.ts | 21 | verde |
+| AC-21.2 | specs/S21-editar-fuente.md | tests/acceptance/s21_editar_fuente.test.ts | 21 | verde |
+| AC-21.3 | specs/S21-editar-fuente.md | tests/acceptance/s21_editar_fuente.test.ts | 21 | verde |
+| AC-21.4 | specs/S21-editar-fuente.md | tests/acceptance/s21_editar_fuente.test.ts | 21 | verde |
+| AC-21.5 | specs/S21-editar-fuente.md | tests/acceptance/s21_editar_fuente.test.ts | 21 | verde |

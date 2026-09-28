@@ -176,7 +176,7 @@ Deno.test("AC-8.4: alta url: payload correcto, alta en lista y form limpio", asy
   await escribirEn(url, "https://ejemplo.com/horarios.json");
   await enviarForm(buscar(pagina.container, "form"));
 
-  assertEquals(payloads, [{ name: "Nueva MB", type: "url", url: "https://ejemplo.com/horarios.json" }]);
+  assertEquals(payloads, [{ name: "Nueva MB", type: "url", url: "https://ejemplo.com/horarios.json", cronEnabled: true }]);
   assert(pagina.container.textContent?.includes("Nueva MB"), "la fuente creada no aparece en la lista");
   assertEquals((nombre as HTMLInputElement).value, "", "el form no se limpió");
   await pagina.desmontar();

@@ -16,10 +16,10 @@
 - `CronInput.tsx` no importa `.css` ni assets (regla AC-8.6).
 
 ### AC-13.2 — Alta de fuente con cron
-- Con tipo `url`, el form incluye el campo cron; con cron válido y submit, `createSource` recibe `cronExpr` junto al resto del payload (contrato S1).
+- Con tipo `url`, el form incluye el campo cron; con cron válido y submit, `createSource` recibe `cronExpr` junto al resto del payload (contrato S1) **y `cronEnabled: true`** (enmienda de S21/AC-21.5: el alta URL corre cron por defecto).
 - Con cron **inválido**: el submit queda bloqueado — no se llama `createSource` y el error del cron permanece visible.
-- Con cron vacío: se envía **sin** `cronExpr` (regresión del contrato S1).
-- Con tipo `file` el campo cron no aparece y no se envía `cronExpr`.
+- Con cron vacío: se envía **sin** `cronExpr` (regresión del contrato S1) pero **con `cronEnabled: true`** (enmienda de S21/AC-21.5: frecuencia por defecto = cadencia del maestro).
+- Con tipo `file` el campo cron no aparece y no se envía `cronExpr` ni `cronEnabled`.
 
 ### AC-13.3 — Dependencias consistentes en Deno y Vite
 - `cronstrue` y `cron-parser` figuran tanto en `deno.json` (`imports`, para los tests en Deno) como en `web/package.json` (para `tsc`/Vite). Verificado por inspección de fuente.
