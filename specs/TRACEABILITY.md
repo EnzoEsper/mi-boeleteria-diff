@@ -98,3 +98,6 @@ Regenerada/actualizada en el paso ⑥ de cada micro-loop. `deno task spec:check`
 | AC-18.3 | specs/S18-deep-link-compare.md | tests/acceptance/s18_deep_link_compare.test.ts | 18 | verde |
 | AC-18.4 | specs/S18-deep-link-compare.md | tests/acceptance/s18_deep_link_compare.test.ts | 18 | verde |
 | AC-18.5 | specs/S18-deep-link-compare.md | tests/acceptance/s18_deep_link_compare.test.ts | 18 | verde |
+| AC-19.1 | specs/S19-source-card.md | tests/acceptance/s19_source_card.test.ts | 19 | verde |
+| AC-19.2 | specs/S19-source-card.md | tests/acceptance/s19_source_card.test.ts | 19 | verde |
+| AC-19.3 | specs/S19-source-card.md | tests/acceptance/s19_source_card.test.ts | 19 | verde |

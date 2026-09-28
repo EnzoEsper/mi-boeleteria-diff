@@ -2,6 +2,7 @@ import { useEffect, useState, type FormEvent } from "react";
 import type { CrearFuenteInput, FetchResponse, Fuente } from "./api.ts";
 import { CronInput, esCronValida } from "./CronInput.tsx";
 import { mensajeDe } from "./mensajes.ts";
+import { SourceCard } from "./SourceCard.tsx";
 
 export interface FuentesApi {
   listSources(): Promise<Fuente[]>;
@@ -20,8 +21,6 @@ export function FuentesPage({
   const [fuentes, setFuentes] = useState<Fuente[]>([]);
   const [cargando, setCargando] = useState(true);
   const [errorLista, setErrorLista] = useState<string | null>(null);
-  const [mensajes, setMensajes] = useState<Record<string, string>>({});
-  const [errores, setErrores] = useState<Record<string, string>>({});
   const [nombre, setNombre] = useState("");
   const [tipo, setTipo] = useState<"url" | "file">("url");
   const [url, setUrl] = useState("");
@@ -46,30 +45,6 @@ export function FuentesPage({
       vivo = false;
     };
   }, [api]);
-
-  async function capturar(fuente: Fuente): Promise<void> {
-    try {
-      const res = await api.fetchNow(fuente.id);
-      setMensajes((prev) => ({ ...prev, [fuente.id]: `changed=${res.snapshot.changed}` }));
-      setErrores((prev) => ({ ...prev, [fuente.id]: "" }));
-    } catch (error: unknown) {
-      setErrores((prev) => ({ ...prev, [fuente.id]: mensajeDe(error) }));
-    }
-  }
-
-  async function importar(fuente: Fuente, archivo: File): Promise<void> {
-    try {
-      const res = await api.importFile(fuente.id, archivo);
-      setMensajes((prev) => ({ ...prev, [fuente.id]: `importado (trigger=${res.snapshot.trigger})` }));
-      setErrores((prev) => ({ ...prev, [fuente.id]: "" }));
-    } catch (error: unknown) {
-      setErrores((prev) => ({ ...prev, [fuente.id]: mensajeDe(error) }));
-    }
-  }
-
-  function elegirArchivo(fuente: Fuente, archivo: File | undefined): void {
-    if (archivo) void importar(fuente, archivo);
-  }
 
   async function crear(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
@@ -99,28 +74,7 @@ export function FuentesPage({
       {errorLista && <p className="error">{errorLista}</p>}
       <ul>
         {fuentes.map((fuente) => (
-          <li key={fuente.id} data-tipo={fuente.type}>
-            <strong>{fuente.name}</strong> <span className="badge">{fuente.type}</span>
-            {onVerHistorial && (
-              <button type="button" onClick={() => onVerHistorial(fuente)}>
-                Historial
-              </button>
-            )}
-            {fuente.type === "url" && (
-              <button type="button" onClick={() => void capturar(fuente)}>
-                Capturar
-              </button>
-            )}
-            {fuente.type === "file" && (
-              <input
-                type="file"
-                accept="application/json"
-                onChange={(event) => elegirArchivo(fuente, event.target.files?.[0])}
-              />
-            )}
-            {mensajes[fuente.id] && <span className="resultado">{mensajes[fuente.id]}</span>}
-            {errores[fuente.id] && <span className="error">{errores[fuente.id]}</span>}
-          </li>
+          <SourceCard key={fuente.id} api={api} fuente={fuente} onVerHistorial={onVerHistorial} />
         ))}
       </ul>
 
