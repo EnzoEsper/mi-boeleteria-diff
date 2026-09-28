@@ -130,3 +130,5 @@ Regenerada/actualizada en el paso ⑥ de cada micro-loop. `deno task spec:check`
 | AC-27.2 | specs/S27-diff-github.md | tests/acceptance/s27_diff_github.test.ts | 27 | verde |
 | AC-27.3 | specs/S27-diff-github.md | tests/acceptance/s27_diff_github.test.ts | 27 | verde |
 | AC-27.4 | specs/S27-diff-github.md | tests/acceptance/s27_diff_github.test.ts | 27 | verde |
+| AC-28.1 | specs/S28-diff-scroll.md | tests/acceptance/s28_diff_scroll.test.ts | 28 | verde |
+| AC-28.2 | specs/S28-diff-scroll.md | tests/acceptance/s28_diff_scroll.test.ts | 28 | verde |

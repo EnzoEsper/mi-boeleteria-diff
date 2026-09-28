@@ -387,9 +387,18 @@ button:hover {
 
 .dif-tabla {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font-family: var(--mono);
   font-size: 13px;
+}
+
+.dif-col-num {
+  width: 60px;
+}
+
+.dif-col-marca {
+  width: 20px;
 }
 
 .dif-num {
@@ -407,8 +416,8 @@ button:hover {
 .dif-codigo {
   padding: 0 10px;
   color: var(--text-h);
-  white-space: pre;
-  overflow-x: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
   vertical-align: top;
 }
 

@@ -230,6 +230,23 @@ export function DiffViewer(
         ? <p className="error">No se pudo armar el diff</p>
         : (
           <table className="dif-tabla">
+            {modo === "split"
+              ? (
+                <colgroup>
+                  <col className="dif-col-num" />
+                  <col />
+                  <col className="dif-col-num" />
+                  <col />
+                </colgroup>
+              )
+              : (
+                <colgroup>
+                  <col className="dif-col-num" />
+                  <col className="dif-col-num" />
+                  <col className="dif-col-marca" />
+                  <col />
+                </colgroup>
+              )}
             <tbody>
               {vista.filas.map(modo === "split" ? filaSplit : filaUnified)}
             </tbody>
