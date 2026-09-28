@@ -32,6 +32,10 @@ export function SourceCard({
   const [cronEdit, setCronEdit] = useState("");
   const [cronActivo, setCronActivo] = useState(false);
   const [stats, setStats] = useState<StatsFuente | null>(null);
+  const [capturando, setCapturando] = useState(false);
+  const [guardando, setGuardando] = useState(false);
+  const [borrando, setBorrando] = useState(false);
+  const [importando, setImportando] = useState(false);
 
   async function recargarStats(): Promise<void> {
     try {
@@ -46,6 +50,8 @@ export function SourceCard({
   }, [fuente.id]);
 
   async function capturar(): Promise<void> {
+    if (capturando) return;
+    setCapturando(true);
     try {
       const res = await api.fetchNow(fuente.id);
       setMensaje(`changed=${res.snapshot.changed}`);
@@ -53,12 +59,14 @@ export function SourceCard({
     } catch (err: unknown) {
       setError(mensajeDe(err));
     } finally {
+      setCapturando(false);
       await recargarStats();
     }
   }
 
   async function importar(archivo: File | undefined): Promise<void> {
-    if (!archivo) return;
+    if (!archivo || importando) return;
+    setImportando(true);
     try {
       const res = await api.importFile(fuente.id, archivo);
       setMensaje(`importado (trigger=${res.snapshot.trigger})`);
@@ -66,6 +74,7 @@ export function SourceCard({
     } catch (err: unknown) {
       setError(mensajeDe(err));
     } finally {
+      setImportando(false);
       await recargarStats();
     }
   }
@@ -85,11 +94,13 @@ export function SourceCard({
 
   async function guardar(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
+    if (guardando) return;
     const cron = cronEdit.trim();
     if (fuente.type === "url" && cron !== "" && !esCronValida(cron)) return;
     const patch: ActualizarFuenteInput = fuente.type === "url"
       ? { name: nombreEdit.trim(), cronExpr: cron === "" ? null : cron, cronEnabled: cronActivo }
       : { name: nombreEdit.trim() };
+    setGuardando(true);
     try {
       const actualizada = await api.updateSource(fuente.id, patch);
       onActualizada?.(actualizada);
@@ -98,20 +109,26 @@ export function SourceCard({
       setError(null);
     } catch (err: unknown) {
       setError(mensajeDe(err));
+    } finally {
+      setGuardando(false);
     }
   }
 
   function borrar(): void {
+    if (borrando) return;
     const seguro = globalThis.window.confirm(
       `¿Borrar la fuente "${fuente.name}"? Se eliminan también sus snapshots.`,
     );
     if (!seguro) return;
+    setBorrando(true);
     void (async () => {
       try {
         await api.deleteSource(fuente.id);
         onBorrada?.(fuente.id);
       } catch (err: unknown) {
         setError(mensajeDe(err));
+      } finally {
+        setBorrando(false);
       }
     })();
   }
@@ -139,7 +156,9 @@ export function SourceCard({
               </label>
             </>
           )}
-          <button type="submit">Guardar</button>
+          <button type="submit" disabled={guardando}>
+            Guardar
+          </button>
           <button type="button" onClick={cancelar}>
             Cancelar
           </button>
@@ -155,7 +174,7 @@ export function SourceCard({
             Editar
           </button>
           {fuente.type === "url" && (
-            <button type="button" onClick={() => void capturar()}>
+            <button type="button" disabled={capturando} onClick={() => void capturar()}>
               Capturar
             </button>
           )}
@@ -163,10 +182,11 @@ export function SourceCard({
             <input
               type="file"
               accept="application/json"
+              disabled={importando}
               onChange={(event) => void importar(event.target.files?.[0])}
             />
           )}
-          <button type="button" onClick={borrar}>
+          <button type="button" disabled={borrando} onClick={borrar}>
             Borrar
           </button>
         </>

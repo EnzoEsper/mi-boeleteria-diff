@@ -38,6 +38,7 @@ export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCom
   const [trigger, setTrigger] = useState("todos");
   const [soloCambios, setSoloCambios] = useState(false);
   const [json, setJson] = useState<{ timestamp: number; texto: string | null; error: string | null } | null>(null);
+  const [comparando, setComparando] = useState(false);
   const diffCargado = useRef<string | null>(null);
 
   useEffect(() => {
@@ -87,6 +88,7 @@ export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCom
   }, [api, comparacion, fuente.id]);
 
   async function comparar(): Promise<void> {
+    if (comparando) return;
     if (!desde || !hasta) {
       setErrorDiff("Elegí dos snapshots");
       return;
@@ -97,6 +99,7 @@ export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCom
       onCompararEnRuta(izq, der);
       return;
     }
+    setComparando(true);
     try {
       const diff = await api.getDiff(fuente.id, izq, der);
       const izquierdo = await api.getSnapshot(fuente.id, izq);
@@ -104,6 +107,8 @@ export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCom
       setErrorDiff(null);
     } catch (err: unknown) {
       setErrorDiff(mensajeDe(err));
+    } finally {
+      setComparando(false);
     }
   }
 
@@ -145,10 +150,16 @@ export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCom
         Volver
       </button>
 
-      {cargando && <p>Cargando…</p>}
+      {cargando && <p data-cargando>Cargando…</p>}
       {error && <p className="error">{error}</p>}
 
-      {!cargando && !error && (
+      {!cargando && !error && entradas.length === 0 && (
+        <p className="vacio" data-vacio>
+          Todavía no hay capturas en esta fuente.
+        </p>
+      )}
+
+      {!cargando && !error && entradas.length > 0 && (
         <>
           <div className="filtros">
             <input
@@ -180,7 +191,14 @@ export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCom
         </>
       )}
 
-      <ul className="timeline">
+      {!cargando && !error && entradas.length > 0 && visibles.length === 0 && (
+        <p className="vacio" data-sin-resultados>
+          Ningún snapshot coincide con los filtros.
+        </p>
+      )}
+
+      {entradas.length > 0 && (
+        <ul className="timeline">
         {visibles.map((entrada) => (
           <li
             key={entrada.timestamp}
@@ -199,7 +217,11 @@ export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCom
             {entrada.deltaFrom !== null && (
               <span className="flag">delta de {formatearMomento(entrada.deltaFrom)}</span>
             )}
-            <button type="button" onClick={() => void alternarJson(entrada.timestamp)}>
+            <button
+              type="button"
+              disabled={json?.timestamp === entrada.timestamp && json.texto === null && json.error === null}
+              onClick={() => void alternarJson(entrada.timestamp)}
+            >
               JSON
             </button>
             {json?.timestamp === entrada.timestamp && json.texto !== null && (
@@ -210,29 +232,32 @@ export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCom
             )}
           </li>
         ))}
-      </ul>
+        </ul>
+      )}
 
-      <div className="comparador">
-        <select aria-label="Desde" value={desde} onChange={(event) => setDesde(event.target.value)}>
-          <option value="">Elegir…</option>
-          {entradas.map((entrada) => (
-            <option key={entrada.timestamp} value={entrada.timestamp}>
-              {formatearMomento(entrada.timestamp)} ({entrada.trigger})
-            </option>
-          ))}
-        </select>
-        <select aria-label="Hasta" value={hasta} onChange={(event) => setHasta(event.target.value)}>
-          <option value="">Elegir…</option>
-          {entradas.map((entrada) => (
-            <option key={entrada.timestamp} value={entrada.timestamp}>
-              {formatearMomento(entrada.timestamp)} ({entrada.trigger})
-            </option>
-          ))}
-        </select>
-        <button type="button" onClick={() => void comparar()}>
-          Comparar
-        </button>
-      </div>
+      {entradas.length > 0 && (
+        <div className="comparador">
+          <select aria-label="Desde" value={desde} onChange={(event) => setDesde(event.target.value)}>
+            <option value="">Elegir…</option>
+            {entradas.map((entrada) => (
+              <option key={entrada.timestamp} value={entrada.timestamp}>
+                {formatearMomento(entrada.timestamp)} ({entrada.trigger})
+              </option>
+            ))}
+          </select>
+          <select aria-label="Hasta" value={hasta} onChange={(event) => setHasta(event.target.value)}>
+            <option value="">Elegir…</option>
+            {entradas.map((entrada) => (
+              <option key={entrada.timestamp} value={entrada.timestamp}>
+                {formatearMomento(entrada.timestamp)} ({entrada.trigger})
+              </option>
+            ))}
+          </select>
+          <button type="button" disabled={comparando} onClick={() => void comparar()}>
+            Comparar
+          </button>
+        </div>
+      )}
 
       {errorDiff && <p className="error">{errorDiff}</p>}
       {resultado && <DiffViewer delta={resultado.delta} left={resultado.left} />}

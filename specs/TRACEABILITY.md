@@ -119,3 +119,7 @@ Regenerada/actualizada en el paso ⑥ de cada micro-loop. `deno task spec:check`
 | AC-24.2 | specs/S24-stats-visibles.md | tests/acceptance/s24_stats_visibles.test.ts | 24 | verde |
 | AC-24.3 | specs/S24-stats-visibles.md | tests/acceptance/s24_stats_visibles.test.ts | 24 | verde |
 | AC-24.4 | specs/S24-stats-visibles.md | tests/acceptance/s24_stats_visibles.test.ts | 24 | verde |
+| AC-25.1 | specs/S25-estados-carga-vacios.md | tests/acceptance/s25_estados_carga.test.ts | 25 | verde |
+| AC-25.2 | specs/S25-estados-carga-vacios.md | tests/acceptance/s25_estados_carga.test.ts | 25 | verde |
+| AC-25.3 | specs/S25-estados-carga-vacios.md | tests/acceptance/s25_estados_carga.test.ts | 25 | verde |
+| AC-25.4 | specs/S25-estados-carga-vacios.md | tests/acceptance/s25_estados_carga.test.ts | 25 | verde |

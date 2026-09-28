@@ -29,6 +29,7 @@ export function FuentesPage({
   const [url, setUrl] = useState("");
   const [cronExpr, setCronExpr] = useState("");
   const [errorForm, setErrorForm] = useState<string | null>(null);
+  const [creando, setCreando] = useState(false);
 
   useEffect(() => {
     let vivo = true;
@@ -51,6 +52,7 @@ export function FuentesPage({
 
   async function crear(event: FormEvent<HTMLFormElement>): Promise<void> {
     event.preventDefault();
+    if (creando) return;
     const cron = cronExpr.trim();
     if (tipo === "url" && cron !== "" && !esCronValida(cron)) {
       return;
@@ -58,6 +60,7 @@ export function FuentesPage({
     const input: CrearFuenteInput = tipo === "url"
       ? { name: nombre, type: "url", url, cronEnabled: true, ...(cron !== "" ? { cronExpr: cron } : {}) }
       : { name: nombre, type: "file" };
+    setCreando(true);
     try {
       const creada = await api.createSource(input);
       setFuentes((prev) => [creada, ...prev]);
@@ -67,27 +70,36 @@ export function FuentesPage({
       setErrorForm(null);
     } catch (error: unknown) {
       setErrorForm(mensajeDe(error));
+    } finally {
+      setCreando(false);
     }
   }
 
   return (
     <section>
       <h2>Fuentes</h2>
-      {cargando && <p>Cargando…</p>}
+      {cargando && <p data-cargando>Cargando…</p>}
       {errorLista && <p className="error">{errorLista}</p>}
-      <ul>
-        {fuentes.map((fuente) => (
-          <SourceCard
-            key={fuente.id}
-            api={api}
-            fuente={fuente}
-            onVerHistorial={onVerHistorial}
-            onBorrada={(id) => setFuentes((prev) => prev.filter((f) => f.id !== id))}
-            onActualizada={(actualizada) =>
-              setFuentes((prev) => prev.map((f) => (f.id === actualizada.id ? actualizada : f)))}
-          />
-        ))}
-      </ul>
+      {!cargando && !errorLista && fuentes.length === 0 && (
+        <p className="vacio" data-vacio>
+          Todavía no hay fuentes — creá la primera con el formulario de abajo.
+        </p>
+      )}
+      {fuentes.length > 0 && (
+        <ul>
+          {fuentes.map((fuente) => (
+            <SourceCard
+              key={fuente.id}
+              api={api}
+              fuente={fuente}
+              onVerHistorial={onVerHistorial}
+              onBorrada={(id) => setFuentes((prev) => prev.filter((f) => f.id !== id))}
+              onActualizada={(actualizada) =>
+                setFuentes((prev) => prev.map((f) => (f.id === actualizada.id ? actualizada : f)))}
+            />
+          ))}
+        </ul>
+      )}
 
       <form onSubmit={(event) => void crear(event)}>
         <input
@@ -107,7 +119,9 @@ export function FuentesPage({
           />
         )}
         {tipo === "url" && <CronInput value={cronExpr} onChange={setCronExpr} />}
-        <button type="submit">Crear fuente</button>
+        <button type="submit" disabled={creando}>
+          Crear fuente
+        </button>
       </form>
       {errorForm && <p className="error">{errorForm}</p>}
     </section>
