@@ -24,6 +24,7 @@ export function apiStub(sobrescribir: Partial<Api>): Api {
     getSnapshot: noImplementado as Api["getSnapshot"],
     getDiff: noImplementado as Api["getDiff"],
     importFile: noImplementado as Api["importFile"],
+    deleteSource: noImplementado as Api["deleteSource"],
     ...sobrescribir,
   };
 }

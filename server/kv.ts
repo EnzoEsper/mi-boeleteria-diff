@@ -101,6 +101,22 @@ export async function getSource(kv: Deno.Kv, id: string): Promise<Source | null>
   return entry.value;
 }
 
+export async function deleteSource(kv: Deno.Kv, id: string): Promise<boolean> {
+  if (!(await getSource(kv, id))) return false;
+  // Las claves exactas (source/latest/stats) se borran directo: kv.list({prefix})
+  // en Deno 2.6.7 EXCLUYE la clave igual al prefijo. Los prefijos con hijos
+  // (snapshot/blob) sí se listan bien porque sus claves son estrictamente mayores.
+  await kv.delete(sourceKey(id));
+  await kv.delete(latestKey(id));
+  await kv.delete(statsKey(id));
+  for (const prefijo of [["snapshot", id], ["blob", id]] as const) {
+    for await (const entry of kv.list({ prefix: prefijo })) {
+      await kv.delete(entry.key);
+    }
+  }
+  return true;
+}
+
 export async function getSnapshot(kv: Deno.Kv, sourceId: string, timestamp: number): Promise<Snapshot | null> {
   const entry = await kv.get<Snapshot>(["snapshot", sourceId, timestamp]);
   return entry.value;

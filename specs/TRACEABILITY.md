@@ -101,3 +101,7 @@ Regenerada/actualizada en el paso ⑥ de cada micro-loop. `deno task spec:check`
 | AC-19.1 | specs/S19-source-card.md | tests/acceptance/s19_source_card.test.ts | 19 | verde |
 | AC-19.2 | specs/S19-source-card.md | tests/acceptance/s19_source_card.test.ts | 19 | verde |
 | AC-19.3 | specs/S19-source-card.md | tests/acceptance/s19_source_card.test.ts | 19 | verde |
+| AC-20.1 | specs/S20-borrar-fuente.md | tests/acceptance/s20_borrar_fuente.test.ts | 20 | verde |
+| AC-20.2 | specs/S20-borrar-fuente.md | tests/acceptance/s20_borrar_fuente.test.ts | 20 | verde |
+| AC-20.3 | specs/S20-borrar-fuente.md | tests/acceptance/s20_borrar_fuente.test.ts | 20 | verde |
+| AC-20.4 | specs/S20-borrar-fuente.md | tests/acceptance/s20_borrar_fuente.test.ts | 20 | verde |

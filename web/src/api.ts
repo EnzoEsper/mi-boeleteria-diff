@@ -109,6 +109,12 @@ export function createApi(fetchImpl: FetchLike = fetch) {
     return await res.json();
   }
 
+  async function del(path: string): Promise<unknown> {
+    const res = await fetchImpl(`${path}`, { method: "DELETE" });
+    await lanzarSiError(res);
+    return await res.json();
+  }
+
   return {
     listSources: (): Promise<Fuente[]> => get("/api/sources") as Promise<Fuente[]>,
     getSource: (id: string): Promise<Fuente> => get(`/api/sources/${id}`) as Promise<Fuente>,
@@ -130,6 +136,8 @@ export function createApi(fetchImpl: FetchLike = fetch) {
       form.append("file", file, file.name);
       return post(`/api/sources/${id}/import`, { body: form }) as Promise<FetchResponse>;
     },
+    deleteSource: (id: string): Promise<{ deleted: string }> =>
+      del(`/api/sources/${id}`) as Promise<{ deleted: string }>,
   };
 }
 

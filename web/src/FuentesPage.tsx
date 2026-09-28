@@ -9,6 +9,7 @@ export interface FuentesApi {
   createSource(input: CrearFuenteInput): Promise<Fuente>;
   fetchNow(id: string): Promise<FetchResponse>;
   importFile(id: string, file: File): Promise<FetchResponse>;
+  deleteSource(id: string): Promise<{ deleted: string }>;
 }
 
 export function FuentesPage({
@@ -74,7 +75,13 @@ export function FuentesPage({
       {errorLista && <p className="error">{errorLista}</p>}
       <ul>
         {fuentes.map((fuente) => (
-          <SourceCard key={fuente.id} api={api} fuente={fuente} onVerHistorial={onVerHistorial} />
+          <SourceCard
+            key={fuente.id}
+            api={api}
+            fuente={fuente}
+            onVerHistorial={onVerHistorial}
+            onBorrada={(id) => setFuentes((prev) => prev.filter((f) => f.id !== id))}
+          />
         ))}
       </ul>
 

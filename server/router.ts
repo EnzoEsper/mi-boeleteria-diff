@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { z } from "zod";
 import { diffJson } from "./diff.ts";
-import { createSource, getSource, getSnapshot, listSnapshots, listSources } from "./kv.ts";
+import { createSource, deleteSource, getSource, getSnapshot, listSnapshots, listSources } from "./kv.ts";
 import {
   fetchAndStore,
   FetchSourceError,
@@ -68,6 +68,13 @@ export function createApp(kv: Deno.Kv, deps: AppDeps = {}): Hono {
     const source = await getSource(kv, c.req.param("id"));
     if (!source) return c.json({ error: "fuente no encontrada" }, 404);
     return c.json(source);
+  });
+
+  app.delete("/api/sources/:id", async (c) => {
+    const id = c.req.param("id");
+    const borrada = await deleteSource(kv, id);
+    if (!borrada) return c.json({ error: "fuente no encontrada" }, 404);
+    return c.json({ deleted: id });
   });
 
   app.post("/api/sources/:id/fetch", async (c) => {
