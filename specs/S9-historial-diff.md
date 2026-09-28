@@ -9,7 +9,7 @@
 ## Criterios de aceptación
 
 ### AC-9.1 — HistorialPage lista el timeline de la fuente
-- Con `listSnapshots` stub devolviendo 3 entradas (cambiadas y sin cambiar, triggers `manual`/`cron`/`import`), el DOM muestra por snapshot: momento en UTC (`YYYY-MM-DD HH:mm:ss`), hash corto (8 chars), tamaño en bytes, el `trigger` y el estado `changed` (badge `sin cambios` cuando `changed: false`), más los flags de almacenamiento (`sinceBase`/`deltaFrom` cuando existen).
+- Con `listSnapshots` stub devolviendo 3 entradas (cambiadas y sin cambiar, triggers `manual`/`cron`/`import`), el DOM muestra por snapshot: momento en **Buenos Aires** (`America/Argentina/Buenos_Aires`, `YYYY-MM-DD HH:mm:ss` — enmienda de S22/AC-22.1, antes UTC), hash corto (8 chars), tamaño en bytes, el `trigger` y el estado `changed` (badge `sin cambios` cuando `changed: false`), más los flags de almacenamiento (`sinceBase`/`deltaFrom` cuando existen).
 - Si `listSnapshots` rechaza con `ApiError`, se muestra su `message` y la página no se rompe.
 - Un botón **Volver** invoca `onVolver`.
 
@@ -34,7 +34,7 @@
 - `DiffViewer.tsx`, `HistorialPage.tsx` y `Shell.tsx` no importan `.css` ni assets (mismo criterio que AC-8.6).
 
 ## Datos de prueba
-- Entradas `EntradaSnapshot` con timestamps arbitrarios (p. ej. `1_700_000_000_000`, `1_700_008_600_000`, `1_700_017_200_000`) — la fecha UTC se calcula con `getUTC*` para ser determinista.
+- Entradas `EntradaSnapshot` con timestamps arbitrarios (p. ej. `1_700_000_000_000`, `1_700_008_600_000`, `1_700_017_200_000`) — la fecha se formatea con `formatearMomento` de `web/src/tiempo.ts` en `America/Argentina/Buenos_Aires` (S22) para ser determinista: T1 (22:13:20 UTC) se ve como `19:13:20`.
 - Stub de `getDiff` devuelve `{ changed: true, delta: {h: ["10:00", "11:00"]} }` y `getSnapshot` devuelve `{ json: {h: "10:00"} }`; el formatter real de jsondiffpatch genera el HTML (sin DOM, verificado en spike S0).
 - Helpers de S8 (`montar`, `click`, `escribirEn`, `buscar`, `boton`) reutilizados; react-dom sigue cargándose tras `instalarDom()` (AC-8.1).
 

@@ -78,7 +78,7 @@ Deno.test("AC-9.1: HistorialPage lista el timeline de la fuente", async () => {
   );
   const texto = pagina.container.textContent ?? "";
   assert(texto.includes("Horarios MB"), "falta el nombre de la fuente");
-  assert(texto.includes("2023-11-14 22:13:20"), "falta el momento UTC del primer snapshot");
+  assert(texto.includes("2023-11-14 19:13:20"), "falta el momento en hora Buenos Aires del primer snapshot");
   assert(texto.includes("abcdef01"), "falta el hash corto (8 chars)");
   assert(texto.includes("197942"), "falta el tamaño en bytes");
   for (const trigger of ["cron", "manual", "import"]) {

@@ -136,7 +136,7 @@ Deno.test("AC-18.2: /historial/:id sin query muestra solo el timeline (regresió
   assertEquals(globalThis.window.location.pathname, `/historial/${FUENTE.id}`, "no debe redirigir sin query");
   assertEquals(pedidos.length, 0, "sin query no debe pedir diff");
   assert(
-    pagina.container.textContent?.includes("2023-11-14 22:13:20"),
+    pagina.container.textContent?.includes("2023-11-14 19:13:20"),
     "el timeline pre-existente dejó de renderizar",
   );
   assert(pagina.container.querySelector(".jsondiffpatch-delta") === null, "no debe haber diff");
@@ -180,7 +180,7 @@ Deno.test("AC-18.3: Comparar sincroniza la URL y Atrás limpia el diff", async (
     "Atrás dejó el diff en pantalla",
   );
   assert(
-    pagina.container.textContent?.includes("2023-11-14 22:13:20"),
+    pagina.container.textContent?.includes("2023-11-14 19:13:20"),
     "Atrás dejó el timeline visible",
   );
   await pagina.desmontar();

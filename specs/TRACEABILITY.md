@@ -110,3 +110,6 @@ Regenerada/actualizada en el paso ⑥ de cada micro-loop. `deno task spec:check`
 | AC-21.3 | specs/S21-editar-fuente.md | tests/acceptance/s21_editar_fuente.test.ts | 21 | verde |
 | AC-21.4 | specs/S21-editar-fuente.md | tests/acceptance/s21_editar_fuente.test.ts | 21 | verde |
 | AC-21.5 | specs/S21-editar-fuente.md | tests/acceptance/s21_editar_fuente.test.ts | 21 | verde |
+| AC-22.1 | specs/S22-hora-buenos-aires.md | tests/acceptance/s22_hora_buenos_aires.test.ts | 22 | verde |
+| AC-22.2 | specs/S22-hora-buenos-aires.md | tests/acceptance/s22_hora_buenos_aires.test.ts | 22 | verde |
+| AC-22.3 | specs/S22-hora-buenos-aires.md | tests/acceptance/s22_hora_buenos_aires.test.ts | 22 | verde |

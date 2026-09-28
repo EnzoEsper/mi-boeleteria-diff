@@ -2,19 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import type { Api, EntradaSnapshot, Fuente } from "./api.ts";
 import { DiffViewer } from "./DiffViewer.tsx";
 import { mensajeDe } from "./mensajes.ts";
+import { formatearMomento } from "./tiempo.ts";
 
 export type HistorialApi = Pick<Api, "listSnapshots" | "getDiff" | "getSnapshot">;
 
 export interface Comparacion {
   left: number;
   right: number;
-}
-
-function formatearMomento(timestamp: number): string {
-  const fecha = new Date(timestamp);
-  const p = (n: number) => String(n).padStart(2, "0");
-  return `${fecha.getUTCFullYear()}-${p(fecha.getUTCMonth() + 1)}-${p(fecha.getUTCDate())} ${
-    p(fecha.getUTCHours())}:${p(fecha.getUTCMinutes())}:${p(fecha.getUTCSeconds())}`;
 }
 
 interface HistorialProps {
