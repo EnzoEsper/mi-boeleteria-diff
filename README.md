@@ -66,6 +66,14 @@ server/    Deno: main, router, kv, diff, snapshot, cron
 web/       Vite + React + TypeScript
 ```
 
+## Rutas
+
+| Ruta | Qué muestra |
+|---|---|
+| `/` | Fuentes: crear, capturar, importar |
+| `/historial/:id` | Timeline con filtros + comparador |
+| `/historial/:id/compare?left=<ts>&right=<ts>` | **URL compartible** de un diff: carga ese `left`/`right` directo en el mismo historial; una query malformada vuelve al timeline |
+
 ## Deploy
 
 Despliegue en **Deno Deploy EA** — la plataforma activa (la versión clásica se apagó el 20-jul-2026). El proceso único de `server/main.ts` sirve **API + cron + estáticos** (`web/dist/` como fallback).

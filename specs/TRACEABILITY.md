@@ -93,3 +93,8 @@ Regenerada/actualizada en el paso ⑥ de cada micro-loop. `deno task spec:check`
 | AC-17.2 | specs/S17-cron-baja-frecuencia.md | tests/acceptance/s17_cron_baja_frecuencia.test.ts | 17 | verde |
 | AC-17.3 | specs/S17-cron-baja-frecuencia.md | tests/acceptance/s17_cron_baja_frecuencia.test.ts | 17 | verde |
 | AC-17.4 | specs/S17-cron-baja-frecuencia.md | tests/acceptance/s17_cron_baja_frecuencia.test.ts | 17 | verde |
+| AC-18.1 | specs/S18-deep-link-compare.md | tests/acceptance/s18_deep_link_compare.test.ts | 18 | verde |
+| AC-18.2 | specs/S18-deep-link-compare.md | tests/acceptance/s18_deep_link_compare.test.ts | 18 | verde |
+| AC-18.3 | specs/S18-deep-link-compare.md | tests/acceptance/s18_deep_link_compare.test.ts | 18 | verde |
+| AC-18.4 | specs/S18-deep-link-compare.md | tests/acceptance/s18_deep_link_compare.test.ts | 18 | verde |
+| AC-18.5 | specs/S18-deep-link-compare.md | tests/acceptance/s18_deep_link_compare.test.ts | 18 | verde |

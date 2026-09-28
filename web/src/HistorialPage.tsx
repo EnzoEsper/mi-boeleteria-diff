@@ -1,9 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Api, EntradaSnapshot, Fuente } from "./api.ts";
 import { DiffViewer } from "./DiffViewer.tsx";
 import { mensajeDe } from "./mensajes.ts";
 
 export type HistorialApi = Pick<Api, "listSnapshots" | "getDiff" | "getSnapshot">;
+
+export interface Comparacion {
+  left: number;
+  right: number;
+}
 
 function formatearMomento(timestamp: number): string {
   const fecha = new Date(timestamp);
@@ -16,6 +21,10 @@ interface HistorialProps {
   api: HistorialApi;
   fuente: Fuente;
   onVolver: () => void;
+  /** Par de la URL (`?left=&right=`) cuando la vista cuelga de una ruta; null si no hay query. */
+  comparacion?: Comparacion | null;
+  /** En contexto de ruta, "Comparar" escribe la URL y el effect carga el diff. */
+  onCompararEnRuta?: (left: number, right: number) => void;
 }
 
 interface Resultado {
@@ -23,7 +32,7 @@ interface Resultado {
   left?: unknown;
 }
 
-export function HistorialPage({ api, fuente, onVolver }: HistorialProps) {
+export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCompararEnRuta }: HistorialProps) {
   const [entradas, setEntradas] = useState<EntradaSnapshot[]>([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +43,7 @@ export function HistorialPage({ api, fuente, onVolver }: HistorialProps) {
   const [busqueda, setBusqueda] = useState("");
   const [trigger, setTrigger] = useState("todos");
   const [soloCambios, setSoloCambios] = useState(false);
+  const diffCargado = useRef<string | null>(null);
 
   useEffect(() => {
     let vivo = true;
@@ -54,14 +64,47 @@ export function HistorialPage({ api, fuente, onVolver }: HistorialProps) {
     };
   }, [api, fuente.id]);
 
+  useEffect(() => {
+    if (!comparacion) {
+      diffCargado.current = null;
+      setResultado(null);
+      setErrorDiff(null);
+      return;
+    }
+    const clave = `${comparacion.left}|${comparacion.right}`;
+    if (diffCargado.current === clave) return;
+    let vivo = true;
+    (async () => {
+      try {
+        const diff = await api.getDiff(fuente.id, comparacion.left, comparacion.right);
+        const izquierdo = await api.getSnapshot(fuente.id, comparacion.left);
+        if (!vivo) return;
+        setResultado({ delta: diff.delta, left: izquierdo.json });
+        setErrorDiff(null);
+        diffCargado.current = clave;
+      } catch (err: unknown) {
+        if (vivo) setErrorDiff(mensajeDe(err));
+      }
+    })();
+    return () => {
+      vivo = false;
+    };
+  }, [api, comparacion, fuente.id]);
+
   async function comparar(): Promise<void> {
     if (!desde || !hasta) {
       setErrorDiff("Elegí dos snapshots");
       return;
     }
+    const izq = Number(desde);
+    const der = Number(hasta);
+    if (onCompararEnRuta) {
+      onCompararEnRuta(izq, der);
+      return;
+    }
     try {
-      const diff = await api.getDiff(fuente.id, Number(desde), Number(hasta));
-      const izquierdo = await api.getSnapshot(fuente.id, Number(desde));
+      const diff = await api.getDiff(fuente.id, izq, der);
+      const izquierdo = await api.getSnapshot(fuente.id, izq);
       setResultado({ delta: diff.delta, left: izquierdo.json });
       setErrorDiff(null);
     } catch (err: unknown) {
