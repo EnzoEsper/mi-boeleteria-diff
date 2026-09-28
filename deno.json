@@ -1,78 +1,66 @@
 {
-    "imports":  {
-                    "@std/assert":  "jsr:@std/assert@1",
-                    "@std/path":  "jsr:@std/path@1",
-                    "cron-parser":  "npm:cron-parser@^5",
-                    "cronstrue":  "npm:cronstrue@^2",
-                    "hono":  "npm:hono@^4",
-                    "jsdom":  "npm:jsdom@24",
-                    "jsondiffpatch":  "npm:jsondiffpatch@0.7.6",
-                    "react":  "npm:react@^19",
-                    "react-router-dom":  "npm:react-router-dom@^7",
-                    "react/jsx-runtime":  "npm:react@^19/jsx-runtime",
-                    "react-dom":  "npm:react-dom@^19",
-                    "react-dom/client":  "npm:react-dom@^19/client",
-                    "zod":  "npm:zod@^4"
-                },
-    "deploy":  {
-                   "org":  "espern4",
-                   "app":  "mi-boleteria-diff",
-                   "install":  "npm --prefix web install",
-                   "build":  "deno task build",
-                   "runtime":  {
-                                   "type":  "dynamic",
-                                   "entrypoint":  "server/main.ts"
-                               }
-               },
-    "compilerOptions":  {
-                            "lib":  [
-                                        "deno.ns",
-                                        "deno.unstable",
-                                        "dom",
-                                        "esnext"
-                                    ],
-                            "jsx":  "react-jsx",
-                            "types":  [
-                                          "npm:@types/react@19",
-                                          "npm:@types/react-dom@19"
-                                      ]
-                        },
-    "unstable":  [
-                     "kv"
-                 ],
-    "tasks":  {
-                  "test":  "deno test -A tests/",
-                  "spec:check":  "deno run -A scripts/spec_check.ts",
-                  "check":  "deno check server/main.ts scripts/spec_check.ts",
-                  "lint":  "deno lint",
-                  "verify":  "deno task spec:check \u0026\u0026 deno lint \u0026\u0026 deno task check \u0026\u0026 deno task test \u0026\u0026 deno task build",
-                  "dev":  "deno run -A --watch server/main.ts",
-                  "dev:web":  "npm --prefix web run dev",
-                  "build":  "npm --prefix web run build",
-                  "deploy":  "deno task build && deno deploy --app mi-boleteria-diff --prod"
-              },
-    "lint":  {
-                 "exclude":  [
-                                 "web/dist/",
-                                 "web/node_modules/",
-                                 "node_modules/"
-                             ]
-             },
-    "fmt":  {
-                "exclude":  [
-                                "tests/fixtures/"
-                            ]
-            }
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1",
+    "@std/path": "jsr:@std/path@1",
+    "cron-parser": "npm:cron-parser@^5",
+    "cronstrue": "npm:cronstrue@^2",
+    "hono": "npm:hono@^4",
+    "jsdom": "npm:jsdom@24",
+    "jsondiffpatch": "npm:jsondiffpatch@0.7.6",
+    "react": "npm:react@^19",
+    "react-router-dom": "npm:react-router-dom@^7",
+    "react/jsx-runtime": "npm:react@^19/jsx-runtime",
+    "react-dom": "npm:react-dom@^19",
+    "react-dom/client": "npm:react-dom@^19/client",
+    "zod": "npm:zod@^4"
+  },
+  "deploy": {
+    "org": "espern4",
+    "app": "mi-boleteria-diff",
+    "install": "npm --prefix web install",
+    "build": "deno task build",
+    "runtime": {
+      "type": "dynamic",
+      "entrypoint": "server/main.ts"
+    }
+  },
+  "compilerOptions": {
+    "lib": [
+      "deno.ns",
+      "deno.unstable",
+      "dom",
+      "esnext"
+    ],
+    "jsx": "react-jsx",
+    "types": [
+      "npm:@types/react@19",
+      "npm:@types/react-dom@19"
+    ]
+  },
+  "unstable": [
+    "kv"
+  ],
+  "tasks": {
+    "test": "deno test -A tests/",
+    "spec:check": "deno run -A scripts/spec_check.ts",
+    "check": "deno check server/main.ts scripts/spec_check.ts",
+    "lint": "deno lint",
+    "verify": "deno task spec:check \u0026\u0026 deno lint \u0026\u0026 deno task check \u0026\u0026 deno task test \u0026\u0026 deno task build",
+    "dev": "deno run -A --watch server/main.ts",
+    "dev:web": "npm --prefix web run dev",
+    "build": "npm --prefix web run build",
+    "deploy": "deno task build && deno deploy --app mi-boleteria-diff --prod"
+  },
+  "lint": {
+    "exclude": [
+      "web/dist/",
+      "web/node_modules/",
+      "node_modules/"
+    ]
+  },
+  "fmt": {
+    "exclude": [
+      "tests/fixtures/"
+    ]
+  }
 }
-
-
-
-
-
-
-
-
-
-
-
-

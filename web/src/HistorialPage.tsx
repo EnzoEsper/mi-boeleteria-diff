@@ -37,6 +37,7 @@ export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCom
   const [busqueda, setBusqueda] = useState("");
   const [trigger, setTrigger] = useState("todos");
   const [soloCambios, setSoloCambios] = useState(false);
+  const [json, setJson] = useState<{ timestamp: number; texto: string | null; error: string | null } | null>(null);
   const diffCargado = useRef<string | null>(null);
 
   useEffect(() => {
@@ -103,6 +104,25 @@ export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCom
       setErrorDiff(null);
     } catch (err: unknown) {
       setErrorDiff(mensajeDe(err));
+    }
+  }
+
+  async function alternarJson(timestamp: number): Promise<void> {
+    if (json?.timestamp === timestamp) {
+      if (json.texto !== null) {
+        setJson(null);
+        return;
+      }
+      if (json.error === null) return; // en curso: un click no debe re-pedir
+    }
+    setJson({ timestamp, texto: null, error: null });
+    try {
+      const detalle = await api.getSnapshot(fuente.id, timestamp);
+      const texto = JSON.stringify(detalle.json, null, 2);
+      setJson((actual) => (actual?.timestamp === timestamp ? { timestamp, texto, error: null } : actual));
+    } catch (err: unknown) {
+      const error = mensajeDe(err);
+      setJson((actual) => (actual?.timestamp === timestamp ? { timestamp, texto: null, error } : actual));
     }
   }
 
@@ -178,6 +198,15 @@ export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCom
             {entrada.sinceBase !== null && <span className="flag">base hace {entrada.sinceBase}</span>}
             {entrada.deltaFrom !== null && (
               <span className="flag">delta de {formatearMomento(entrada.deltaFrom)}</span>
+            )}
+            <button type="button" onClick={() => void alternarJson(entrada.timestamp)}>
+              JSON
+            </button>
+            {json?.timestamp === entrada.timestamp && json.texto !== null && (
+              <pre data-json={entrada.timestamp}>{json.texto}</pre>
+            )}
+            {json?.timestamp === entrada.timestamp && json.error !== null && (
+              <span className="error">{json.error}</span>
             )}
           </li>
         ))}

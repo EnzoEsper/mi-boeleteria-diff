@@ -113,3 +113,5 @@ Regenerada/actualizada en el paso ⑥ de cada micro-loop. `deno task spec:check`
 | AC-22.1 | specs/S22-hora-buenos-aires.md | tests/acceptance/s22_hora_buenos_aires.test.ts | 22 | verde |
 | AC-22.2 | specs/S22-hora-buenos-aires.md | tests/acceptance/s22_hora_buenos_aires.test.ts | 22 | verde |
 | AC-22.3 | specs/S22-hora-buenos-aires.md | tests/acceptance/s22_hora_buenos_aires.test.ts | 22 | verde |
+| AC-23.1 | specs/S23-ver-json-snapshot.md | tests/acceptance/s23_ver_json_snapshot.test.ts | 23 | verde |
+| AC-23.2 | specs/S23-ver-json-snapshot.md | tests/acceptance/s23_ver_json_snapshot.test.ts | 23 | verde |
