@@ -16,9 +16,9 @@
 - `index.css` define tokens en `:root` (colores con acento, tipografía, sombra) con variante `@media (prefers-color-scheme: dark)`, estilos de `body`, y un `@media (max-width: …)` responsive.
 - Reglas presentes y con contenido de diseño para: `.error`, `.badge`, `.resultado`, `.filtros`, `.comparador`, `.timeline` (tarjetas) y `.diff-viewer`.
 
-### AC-14.3 — Sin scaffold muerto y formatter integrado
+### AC-14.3 — Sin scaffold muerto y formatter integrado *(enmendado en S27: fin del formatter)*
 - `web/src/App.css` ya no existe y **ningún** `.tsx` importa `.css` salvo `main.tsx` (el único entrypoint, regla AC-8.6 generalizada).
-- `main.tsx` sigue importando `jsondiffpatch/formatters/styles/html.css` y `index.css` contiene reglas `.jsondiffpatch-…` que integran el diff con la paleta.
+- `main.tsx` importa solo `index.css`, e `index.css` contiene las reglas `.dif-…` que integran el diff de líneas con la paleta. *(Enmendado en S27: antes exigía `jsondiffpatch/formatters/styles/html.css` en main y reglas `.jsondiffpatch-…`; ambos desaparecieron con el reemplazo del DiffViewer.)*
 
 ## Datos de prueba
 - Inspección de fuente (`*.tsx`, `index.css`, `main.tsx`, `App.css`) — el estilo de los AC-0.6 / AC-8.6 / AC-10.5: el gate `deno task build` verifica además que el CSS compile en Vite.

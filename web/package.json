@@ -12,6 +12,7 @@
   "dependencies": {
     "cron-parser": "^5.10.1",
     "cronstrue": "^3.27.0",
+    "diff": "^9.0.0",
     "jsondiffpatch": "^0.7.6",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",

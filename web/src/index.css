@@ -325,33 +325,123 @@ button:hover {
 
 .diff-viewer {
   margin-top: 16px;
-  padding: 16px;
   border: 1px solid var(--border);
   border-radius: 8px;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.dif-encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
   background: var(--bg-soft);
 }
 
-.toggle-unchanged {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 12px;
+.dif-nombre {
+  font-family: var(--mono);
   font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.dif-stat {
+  display: flex;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.dif-stat-add {
+  color: var(--ok);
+}
+
+.dif-stat-del {
+  color: var(--err);
+}
+
+.dif-modos {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.dif-modo {
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg);
+  color: var(--text);
+  font: 13px var(--sans);
   cursor: pointer;
 }
 
-.diff-html {
+.dif-modo[data-activo="si"] {
+  border-color: var(--accent-border);
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+.dif-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mono);
+  font-size: 13px;
+}
+
+.dif-num {
+  min-width: 40px;
+  padding: 0 8px;
+  border-right: 1px solid var(--border);
+  background: var(--bg-soft);
+  color: var(--text);
+  text-align: right;
+  white-space: nowrap;
+  user-select: none;
+  vertical-align: top;
+}
+
+.dif-codigo {
+  padding: 0 10px;
+  color: var(--text-h);
+  white-space: pre;
   overflow-x: auto;
-  font-family: var(--mono);
-  font-size: 14px;
+  vertical-align: top;
 }
 
-.jsondiffpatch-delta {
-  font-family: var(--mono);
+.dif-add {
+  background: var(--ok-bg);
 }
 
-.jsondiffpatch-unchanged {
-  opacity: 0.65;
+.dif-del {
+  background: var(--err-bg);
+}
+
+.dif-marca {
+  padding: 0 6px;
+  background: var(--bg-soft);
+  color: var(--text);
+  text-align: center;
+  user-select: none;
+  vertical-align: top;
+}
+
+.dif-expandir {
+  width: 100%;
+  padding: 4px 10px;
+  border: none;
+  background: var(--accent-bg);
+  color: var(--accent);
+  font: 12px var(--sans);
+  text-align: left;
+  cursor: pointer;
+}
+
+.dif-expandir:hover {
+  background: var(--accent-border);
 }
 
 @media (max-width: 720px) {

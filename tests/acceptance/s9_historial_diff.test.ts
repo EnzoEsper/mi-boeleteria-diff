@@ -157,7 +157,7 @@ Deno.test("AC-9.2: comparar dos snapshots llama getDiff/getSnapshot y renderiza 
 
   assertEquals(diffs, [[T1, T2]], "getDiff no se llamó con los timestamps elegidos");
   assertEquals(snapshotsPedidos, [T1], "getSnapshot (JSON izquierdo) no se pidió desde T1");
-  buscar(pagina.container, ".jsondiffpatch-delta");
+  buscar(pagina.container, ".dif-tabla");
   const texto = pagina.container.textContent ?? "";
   assert(texto.includes("10:00"), "el valor izquierdo del diff no se mostró");
   await pagina.desmontar();
@@ -216,28 +216,23 @@ Deno.test("AC-9.4: un error del diff se muestra sin romper la página", async ()
 // AC-9.5
 // ---------------------------------------------------------------------------
 
-Deno.test("AC-9.5: DiffViewer renderiza format(delta, left) y alterna el toggle", async () => {
+Deno.test("AC-9.5: DiffViewer renderiza la tabla de líneas y alterna el modo (enmendado en S27)", async () => {
   const pagina = await montar(
     createElement(DiffViewer, { delta: { h: ["10:00", "11:00"] }, left: { h: "10:00" } }),
   );
-  buscar(pagina.container, ".jsondiffpatch-delta");
+  buscar(pagina.container, ".dif-tabla");
   const contenedor = buscar(pagina.container, ".diff-viewer");
-  assertEquals(contenedor.getAttribute("data-mostrar-sin-cambios"), "no", "el toggle inicia apagado");
-  const check = buscar<HTMLInputElement>(pagina.container, 'input[type="checkbox"]');
-  await click(check);
-  assertEquals(
-    contenedor.getAttribute("data-mostrar-sin-cambios"),
-    "si",
-    "el checkbox no alternó el atributo del contenedor",
-  );
+  assertEquals(contenedor.getAttribute("data-modo"), "split", "el diff arranca en split");
+  await click(boton(pagina.container, "Unified"));
+  assertEquals(contenedor.getAttribute("data-modo"), "unified", "Unified no alternó data-modo");
   await pagina.desmontar();
 });
 
-Deno.test("AC-9.5: DiffViewer con delta nulo muestra sin cambios sin formatear", async () => {
+Deno.test("AC-9.5: DiffViewer con delta nulo muestra sin cambios sin tabla (enmendado en S27)", async () => {
   const pagina = await montar(createElement(DiffViewer, { delta: null }));
   const texto = pagina.container.textContent ?? "";
   assert(texto.includes("Sin cambios entre ambos snapshots"), "falta el mensaje de sin cambios");
-  assertEquals(pagina.container.querySelector(".jsondiffpatch-delta"), null, "no debe haber diff formateado");
+  assertEquals(pagina.container.querySelector(".dif-tabla"), null, "no debe haber tabla de diff");
   await pagina.desmontar();
 });
 
@@ -282,12 +277,12 @@ Deno.test("AC-9.6: Shell navega fuentes ⇄ historial por rutas (enmendado en S1
   await pagina.desmontar();
 });
 
-Deno.test("AC-9.6: App compone Shell, main importa el CSS del formatter y los componentes no traen CSS", async () => {
+Deno.test("AC-9.6: App compone Shell, main importa solo index.css y los componentes no traen CSS", async () => {
   const main = await Deno.readTextFile(new URL("../../web/src/main.tsx", import.meta.url));
   assert(main.includes("index.css"), "los estilos globales siguen en main.tsx");
   assert(
-    main.includes("jsondiffpatch/formatters/styles/html.css"),
-    "falta el CSS oficial del formatter en main.tsx",
+    !main.includes("jsondiffpatch/formatters/styles/html.css"),
+    "el CSS del formatter fue eliminado con el reemplazo del DiffViewer (S27)",
   );
 
   const app = await Deno.readTextFile(new URL("../../web/src/App.tsx", import.meta.url));

@@ -126,3 +126,7 @@ Regenerada/actualizada en el paso ⑥ de cada micro-loop. `deno task spec:check`
 | AC-26.1 | specs/S26-pulido-ui.md | tests/acceptance/s26_pulido_ui.test.ts | 26 | verde |
 | AC-26.2 | specs/S26-pulido-ui.md | tests/acceptance/s26_pulido_ui.test.ts | 26 | verde |
 | AC-26.3 | specs/S26-pulido-ui.md | tests/acceptance/s26_pulido_ui.test.ts | 26 | verde |
+| AC-27.1 | specs/S27-diff-github.md | tests/acceptance/s27_diff_github.test.ts | 27 | verde |
+| AC-27.2 | specs/S27-diff-github.md | tests/acceptance/s27_diff_github.test.ts | 27 | verde |
+| AC-27.3 | specs/S27-diff-github.md | tests/acceptance/s27_diff_github.test.ts | 27 | verde |
+| AC-27.4 | specs/S27-diff-github.md | tests/acceptance/s27_diff_github.test.ts | 27 | verde |

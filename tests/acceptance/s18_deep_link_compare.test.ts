@@ -82,7 +82,7 @@ Deno.test("AC-18.1: el deep link compare carga getDiff/getSnapshot y muestra el 
   const pagina = await montarShell(stubHistorial(pedidos));
 
   assertEquals(pedidos, [[T1, T2]], "el deep link no pidió el diff con L/R de la URL");
-  buscar(pagina.container, ".jsondiffpatch-delta");
+  buscar(pagina.container, ".dif-tabla");
   assert(
     pagina.container.textContent?.includes("Horarios MB"),
     "la ruta compare no compartió el contenedor del historial",
@@ -123,7 +123,7 @@ Deno.test("AC-18.2: query malformada redirige al timeline sin pedir el diff", as
       pagina.container.textContent?.includes("Horarios MB"),
       `la query "${query}" no dejó el historial visible`,
     );
-    assert(pagina.container.querySelector(".jsondiffpatch-delta") === null, "se mostró un diff");
+    assert(pagina.container.querySelector(".dif-tabla") === null, "se mostró un diff");
     await pagina.desmontar();
   }
 });
@@ -139,7 +139,7 @@ Deno.test("AC-18.2: /historial/:id sin query muestra solo el timeline (regresió
     pagina.container.textContent?.includes("2023-11-14 19:13:20"),
     "el timeline pre-existente dejó de renderizar",
   );
-  assert(pagina.container.querySelector(".jsondiffpatch-delta") === null, "no debe haber diff");
+  assert(pagina.container.querySelector(".dif-tabla") === null, "no debe haber diff");
   await pagina.desmontar();
 });
 
@@ -167,7 +167,7 @@ Deno.test("AC-18.3: Comparar sincroniza la URL y Atrás limpia el diff", async (
     "Comparar no escribió left/right en la URL",
   );
   assertEquals(pedidos, [[T1, T2]], "el diff no se pidió con los valores elegidos");
-  buscar(pagina.container, ".jsondiffpatch-delta");
+  buscar(pagina.container, ".dif-tabla");
 
   await irA(`/historial/${FUENTE.id}`);
   assertEquals(
@@ -176,7 +176,7 @@ Deno.test("AC-18.3: Comparar sincroniza la URL y Atrás limpia el diff", async (
     "Atrás no volvió a la ruta del timeline",
   );
   assert(
-    pagina.container.querySelector(".jsondiffpatch-delta") === null,
+    pagina.container.querySelector(".dif-tabla") === null,
     "Atrás dejó el diff en pantalla",
   );
   assert(
@@ -201,7 +201,7 @@ Deno.test("AC-18.4: cambiar la query re-pide el diff y el mismo par no se repite
 
   await irA(`/historial/${FUENTE.id}/compare?left=${T2}&right=${T3}`);
   assertEquals(pedidos, [[T1, T2], [T2, T3]], "cambiar la query no re-pidió el diff nuevo");
-  buscar(pagina.container, ".jsondiffpatch-delta");
+  buscar(pagina.container, ".dif-tabla");
   await pagina.desmontar();
 });
 

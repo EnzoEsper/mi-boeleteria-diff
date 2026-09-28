@@ -262,7 +262,7 @@ export function HistorialPage({ api, fuente, onVolver, comparacion = null, onCom
       )}
 
       {errorDiff && <p className="error">{errorDiff}</p>}
-      {resultado && <DiffViewer delta={resultado.delta} left={resultado.left} />}
+      {resultado && <DiffViewer delta={resultado.delta} left={resultado.left} nombre={fuente.name} />}
     </section>
   );
 }

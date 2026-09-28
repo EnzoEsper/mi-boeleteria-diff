@@ -29,7 +29,7 @@
 ## Fuera de alcance
 - Skeletons animados/spinners, toggle manual de tema, iconografía, fuentes tipográficas externas, cambios de copy.
 - Reordenar el contenido de las filas/timeline (solo clases y estilo).
-- Estilos del diff de jsondiffpatch (los aporta su CSS importado en main; solo se toca la carcasa `.diff-viewer` si hace falta).
+- Estilos del diff de líneas estilo GitHub (llegan en S27; la carcasa `.diff-viewer` se toca acá solo si hace falta). *(Nota de S27: los estilos del formatter html de jsondiffpatch se eliminaron junto con el árbol.)*
 
 ## Enmiendas
 - Ninguna.

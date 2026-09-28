@@ -4,6 +4,7 @@
     "@std/path": "jsr:@std/path@1",
     "cron-parser": "npm:cron-parser@^5",
     "cronstrue": "npm:cronstrue@^2",
+    "diff": "npm:diff@^9",
     "hono": "npm:hono@^4",
     "jsdom": "npm:jsdom@24",
     "jsondiffpatch": "npm:jsondiffpatch@0.7.6",

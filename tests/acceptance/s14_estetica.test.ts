@@ -55,7 +55,7 @@ Deno.test("AC-14.2: index.css define tokens, modo oscuro, responsive y reglas de
 // AC-14.3
 // ---------------------------------------------------------------------------
 
-Deno.test("AC-14.3: sin App.css ni imports de CSS fuera de main.tsx, formatter integrado", async () => {
+Deno.test("AC-14.3: sin App.css ni imports de CSS fuera de main.tsx, diff integrado", async () => {
   let appCssExiste = true;
   try {
     await Deno.stat(new URL("App.css", src));
@@ -72,9 +72,10 @@ Deno.test("AC-14.3: sin App.css ni imports de CSS fuera de main.tsx, formatter i
   }
 
   const main = await Deno.readTextFile(new URL("main.tsx", src));
-  assert(main.includes("jsondiffpatch/formatters/styles/html.css"), "main.tsx importa el CSS del formatter");
+  assert(!main.includes("jsondiffpatch/formatters/styles/html.css"), "main.tsx ya no importa el CSS del formatter (S27)");
   assert(main.includes("./index.css"), "main.tsx importa index.css");
 
   const css = await Deno.readTextFile(new URL("index.css", src));
-  assert(css.includes(".jsondiffpatch-"), "index.css integra las clases del formatter");
+  assert(css.includes(".dif-"), "index.css integra las reglas del diff de líneas");
+  assert(!css.includes(".jsondiffpatch-"), "index.css ya no tiene reglas del formatter (S27)");
 });
