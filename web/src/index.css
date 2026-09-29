@@ -12,7 +12,8 @@
   --ok-bg: rgba(21, 128, 61, 0.12);
   --err: #b91c1c;
   --err-bg: rgba(185, 28, 28, 0.1);
-  --shadow: rgba(0, 0, 0, 0.08) 0 10px 15px -3px, rgba(0, 0, 0, 0.04) 0 4px 6px -2px;
+  --shadow:
+    rgba(0, 0, 0, 0.08) 0 10px 15px -3px, rgba(0, 0, 0, 0.04) 0 4px 6px -2px;
   --sans: system-ui, "Segoe UI", Roboto, sans-serif;
   --heading: system-ui, "Segoe UI", Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
@@ -33,7 +34,8 @@
     --ok-bg: rgba(74, 222, 128, 0.12);
     --err: #f87171;
     --err-bg: rgba(248, 113, 113, 0.12);
-    --shadow: rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
   }
 }
 
@@ -51,10 +53,16 @@ body {
 
 #root {
   width: 100%;
-  max-width: 960px;
-  margin: 0 auto;
+  margin: 0;
   padding: 24px 16px 64px;
   text-align: left;
+}
+
+main > section,
+main > p {
+  width: 100%;
+  max-width: 960px;
+  margin-inline: auto;
 }
 
 h1,
@@ -93,6 +101,9 @@ ul {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  width: 100%;
+  max-width: 960px;
+  margin-inline: auto;
   padding-bottom: 16px;
   margin-bottom: 20px;
   border-bottom: 1px solid var(--border);
