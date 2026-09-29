@@ -135,3 +135,6 @@ valida que cada AC aparezca aquí y que cada fila apunte a un AC real.
 | AC-28.2 | specs/S28-diff-scroll.md          | tests/acceptance/s28_diff_scroll.test.ts          | 28    | verde     |
 | AC-29.1 | specs/S29-ancho-diff.md           | tests/acceptance/s29_ancho_diff.test.ts           | 29    | pendiente |
 | AC-29.2 | specs/S29-ancho-diff.md           | tests/acceptance/s29_ancho_diff.test.ts           | 29    | pendiente |
+| AC-30.1 | specs/S30-filtro-fechas.md        | tests/acceptance/s30_filtro_fechas.test.ts        | 30    | verde     |
+| AC-30.2 | specs/S30-filtro-fechas.md        | tests/acceptance/s30_filtro_fechas.test.ts        | 30    | verde     |
+| AC-30.3 | specs/S30-filtro-fechas.md        | tests/acceptance/s30_filtro_fechas.test.ts        | 30    | verde     |

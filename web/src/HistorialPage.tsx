@@ -43,6 +43,8 @@ export function HistorialPage(
   const [busqueda, setBusqueda] = useState("");
   const [trigger, setTrigger] = useState("todos");
   const [soloCambios, setSoloCambios] = useState(false);
+  const [fechaDesde, setFechaDesde] = useState("");
+  const [fechaHasta, setFechaHasta] = useState("");
   const [json, setJson] = useState<
     { timestamp: number; texto: string | null; error: string | null } | null
   >(null);
@@ -155,6 +157,11 @@ export function HistorialPage(
 
   const texto = busqueda.trim().toLowerCase();
   const visibles = entradas.filter((entrada) => {
+    if (fechaDesde || fechaHasta) {
+      const dia = formatearMomento(entrada.timestamp).slice(0, 10);
+      if (fechaDesde && dia < fechaDesde) return false;
+      if (fechaHasta && dia > fechaHasta) return false;
+    }
     if (trigger !== "todos" && entrada.trigger !== trigger) return false;
     if (soloCambios && !entrada.changed) return false;
     if (texto) {
@@ -193,6 +200,24 @@ export function HistorialPage(
                 value={busqueda}
                 onChange={(event) => setBusqueda(event.target.value)}
               />
+              <label>
+                Fecha desde
+                <input
+                  type="date"
+                  aria-label="Fecha desde"
+                  value={fechaDesde}
+                  onChange={(event) => setFechaDesde(event.target.value)}
+                />
+              </label>
+              <label>
+                Fecha hasta
+                <input
+                  type="date"
+                  aria-label="Fecha hasta"
+                  value={fechaHasta}
+                  onChange={(event) => setFechaHasta(event.target.value)}
+                />
+              </label>
               <select
                 aria-label="Trigger"
                 value={trigger}
