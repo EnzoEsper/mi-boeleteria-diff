@@ -138,3 +138,6 @@ valida que cada AC aparezca aquí y que cada fila apunte a un AC real.
 | AC-30.1 | specs/S30-filtro-fechas.md        | tests/acceptance/s30_filtro_fechas.test.ts        | 30    | verde     |
 | AC-30.2 | specs/S30-filtro-fechas.md        | tests/acceptance/s30_filtro_fechas.test.ts        | 30    | verde     |
 | AC-30.3 | specs/S30-filtro-fechas.md        | tests/acceptance/s30_filtro_fechas.test.ts        | 30    | verde     |
+| AC-31.1 | specs/S31-click-diff.md           | tests/acceptance/s31_click_diff.test.ts           | 31    | verde     |
+| AC-31.2 | specs/S31-click-diff.md           | tests/acceptance/s31_click_diff.test.ts           | 31    | verde     |
+| AC-31.3 | specs/S31-click-diff.md           | tests/acceptance/s31_click_diff.test.ts           | 31    | verde     |

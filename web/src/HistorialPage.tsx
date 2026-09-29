@@ -113,6 +113,20 @@ export function HistorialPage(
       onCompararEnRuta(izq, der);
       return;
     }
+    await compararPar(izq, der);
+  }
+
+  async function compararConAnterior(entrada: EntradaSnapshot): Promise<void> {
+    if (entrada.deltaFrom === null) return;
+    if (onCompararEnRuta) {
+      onCompararEnRuta(entrada.deltaFrom, entrada.timestamp);
+      return;
+    }
+    await compararPar(entrada.deltaFrom, entrada.timestamp);
+  }
+
+  async function compararPar(izq: number, der: number): Promise<void> {
+    if (comparando) return;
     setComparando(true);
     try {
       const diff = await api.getDiff(fuente.id, izq, der);
@@ -282,6 +296,16 @@ export function HistorialPage(
                   <span className="flag">
                     delta de {formatearMomento(entrada.deltaFrom)}
                   </span>
+                )}
+                {entrada.deltaFrom !== null && (
+                  <button
+                    type="button"
+                    className="ver-diff"
+                    disabled={comparando}
+                    onClick={() => void compararConAnterior(entrada)}
+                  >
+                    Diff con anterior
+                  </button>
                 )}
                 <button
                   type="button"

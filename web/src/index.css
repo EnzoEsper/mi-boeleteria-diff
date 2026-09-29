@@ -266,6 +266,17 @@ button:hover {
   opacity: 0.75;
 }
 
+.ver-diff {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.ver-diff:hover {
+  border-color: var(--accent-border);
+  color: var(--text-h);
+}
+
 .filtros {
   display: flex;
   flex-wrap: wrap;
